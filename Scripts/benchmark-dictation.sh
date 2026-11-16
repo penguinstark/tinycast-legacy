@@ -10,7 +10,7 @@ helper=${2:-"$repo/build/DerivedData/Build/Products/Debug/Tinycast Sonoma Dev.ap
 models=${3:-"$HOME/Library/Caches/com.tinycast.app.sonoma.dev/Dictation"}
 binary=$(mktemp /tmp/tinycast-dictation-benchmark.XXXXXX)
 trap 'rm -f "$binary"' EXIT
-swiftc -O -swift-version 6 -target "$(uname -m)-apple-macos14.0" \
+swiftc -O -swift-version 6 -target "$(uname -m)-apple-macos14.4" \
     "$repo/Tests/dictation-performance.swift" \
     "$repo/Tinycast/Platform/ProcessExit.swift" \
     "$repo/Tinycast/Features/Dictation/Model/DictationModel.swift" \

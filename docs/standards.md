@@ -10,13 +10,13 @@ When this document and the code disagree, the code is probably right and this fi
 
 ## Posture
 
-Tinycast Sonoma supports macOS 14 and later. Swift 6+ with complete strict concurrency is required.
+Tinycast Sonoma supports macOS 14.4 and later. Swift 6+ with complete strict concurrency is required.
 Prefer the newest Swift patterns and Apple APIs that the 14 floor still has, following
 [`AGENTS.md`](../AGENTS.md#posture-macos-14-floor).
 
 Verify API and language-feature availability against the macOS 14 SDK and the compiler used by the
 build and CI. Use direct availability checks before adopting anything newer than the floor. Do not
-introduce speculative fallbacks or support below macOS 14.
+introduce speculative fallbacks or support below macOS 14.4.
 Migration code lives only in `Migrations/` and is deleted after one stable release; see
 [migrations.md](migrations.md).
 
