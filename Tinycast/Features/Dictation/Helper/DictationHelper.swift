@@ -4,7 +4,6 @@ protocol DictationRecognizer {
     func transcribe(_ samples: [Float], language: String?) throws -> String
 }
 
-extension QwenRecognizer: DictationRecognizer {}
 extension ParakeetRecognizer: DictationRecognizer {
     func transcribe(_ samples: [Float], language: String?) throws -> String {
         try transcribe(samples)
@@ -31,10 +30,8 @@ enum DictationHelper {
                     recognizer = nil
                     loaded = nil
                     do {
-                        recognizer = try autoreleasepool { () throws -> any DictationRecognizer in
-                            request.model.isQwen
-                                ? try QwenRecognizer(directory: request.directory)
-                                : try ParakeetRecognizer(directory: request.directory, model: request.model)
+                        recognizer = try autoreleasepool {
+                            try ParakeetRecognizer(directory: request.directory, model: request.model)
                         }
                         loaded = request.model
                     } catch {

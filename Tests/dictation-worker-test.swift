@@ -101,7 +101,7 @@ struct DictationWorkerTest {
     }
 
     private static func testDownload(root: URL) async throws {
-        let models: [DictationModel] = [.redux, .qwenSmall]
+        let models: [DictationModel] = [.redux, .ultra]
         let base = URL(string: "https://dictation.test/")!
         let manager = FileManager.default
         let stale = root.appending(path: ".\(UUID())")
@@ -139,8 +139,8 @@ struct DictationWorkerTest {
         let active = try manager.contentsOfDirectory(atPath: root.path).sorted()
         do {
             try await DictationModelDownloader.download(
-                .qwenSmall,
-                destination: root.appending(path: DictationModel.qwenSmall.folderName),
+                .ultra,
+                destination: root.appending(path: DictationModel.ultra.folderName),
                 baseURL: base, protocolClasses: [DownloadFixture.self])
             fatalError("Concurrent download acquired the same root")
         } catch DictationWire.Failure.busy {}
@@ -241,7 +241,7 @@ private final class DownloadFixture: URLProtocol, @unchecked Sendable {
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
         if url.path.contains("/tree/") {
             let checksum = SHA256.hash(data: Self.content).map { String(format: "%02x", $0) }.joined()
-            let files = [DictationModel.redux, .qwenSmall].reduce(into: Set<String>()) {
+            let files = [DictationModel.redux, .ultra].reduce(into: Set<String>()) {
                 $0.formUnion($1.requiredFiles)
             }.sorted().map { name in
                 [

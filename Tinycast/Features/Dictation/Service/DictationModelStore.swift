@@ -142,7 +142,7 @@ final class DictationModelStore {
             self.worker = worker
             let request = DictationWire.Request(
                 id: UUID(), model: model, directory: directory(for: model),
-                sampleCount: samples.count, language: model.isQwen ? language : nil)
+                sampleCount: samples.count, language: nil)
             let text = try await worker.transcribe(samples, request: request) { [weak self] in
                 guard let self, self.worker === worker, self.transcribing else { return }
                 self.loadedModel = model
