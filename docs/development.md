@@ -6,7 +6,8 @@ verifying a change is [testing.md](testing.md).
 ## Requirements
 
 - macOS 14.4 or later (Sonoma).
-- Xcode 26 — it provides the SwiftUI macro plugin and the SDK.
+- Xcode 16.3 or later — it provides the SwiftUI macro plugin and the macOS 14 SDK. The fork is
+  verified with Xcode 26.
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen), and for linting:
   `brew install swiftlint`.
 - Node, for the generators and the local test stub servers `run-tests.sh` drives. It is the only
