@@ -68,7 +68,7 @@ struct NoteSwitcherView: View {
         if notes.visibleNotes.isEmpty {
             VStack(spacing: Theme.Spacing.md) {
                 SymbolImage(
-                    name: notes.isSearching ? "clock" : "text.page",
+                    name: notes.isSearching ? "clock" : "doc.plaintext",
                     size: Theme.Size.noteGlyph
                 )
                 .foregroundStyle(Theme.Colors.textSecondary)
@@ -153,7 +153,7 @@ private struct NoteSwitcherRow: View {
 
     var body: some View {
         HStack(spacing: Theme.Spacing.lg) {
-            SymbolImage(name: "text.page", size: Theme.Size.noteGlyph)
+            SymbolImage(name: "doc.plaintext", size: Theme.Size.noteGlyph)
                 .foregroundStyle(Theme.Colors.textSecondary)
                 .frame(width: Theme.Size.rowIcon, height: Theme.Size.rowIcon)
             if editing {

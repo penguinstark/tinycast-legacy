@@ -503,21 +503,21 @@ final class NotesCoordinator {
                 let retry = await core.reportFailure(
                     title: String(localized: "Couldn't Open Note"),
                     message: failure.localizedDescription,
-                    symbol: "text.page",
+                    symbol: "doc.plaintext",
                     recovery: String(localized: "Retry"))
                 if retry { _ = await store.reload() }
             case .save(let failure):
                 let retry = await core.reportFailure(
                     title: String(localized: "Couldn't Save Note"),
                     message: failure.localizedDescription,
-                    symbol: "text.page",
+                    symbol: "doc.plaintext",
                     recovery: String(localized: "Retry"))
                 if retry { await store.retrySave() }
             case .operation(let failure):
                 _ = await core.reportFailure(
                     title: String(localized: "Couldn't Update Note"),
                     message: failure.localizedDescription,
-                    symbol: "text.page",
+                    symbol: "doc.plaintext",
                     recovery: nil)
             }
             issueTask = nil

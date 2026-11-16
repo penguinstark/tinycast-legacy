@@ -85,7 +85,7 @@ struct NotesView: View {
 
     private var emptyState: some View {
         VStack(spacing: Theme.Spacing.lg) {
-            SymbolImage(name: "text.page", size: Theme.Size.noteEmptyGlyph)
+            SymbolImage(name: "doc.plaintext", size: Theme.Size.noteEmptyGlyph)
                 .foregroundStyle(Theme.Colors.textTertiary)
             Text("No Notes")
                 .font(Theme.Typography.rowTitle)

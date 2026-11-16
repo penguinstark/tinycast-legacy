@@ -147,7 +147,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .createEvent: return "calendar.badge.plus"
         case .copyMeetingLink: return "link"
         case .openInCalendar: return "calendar.badge.clock"
-        case .showNotes: return "text.page"
+        case .showNotes: return "doc.plaintext"
         case .createNote: return "note.text.badge.plus"
         case .searchNotes: return "text.magnifyingglass"
         case .createWindowLayout: return "plus.rectangle.on.rectangle"
