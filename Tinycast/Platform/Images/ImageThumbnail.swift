@@ -1,6 +1,6 @@
 import AppKit
 import ImageIO
-import Synchronization
+import os
 
 enum ImageThumbnail {
     private static let cache = ThumbnailCache(
@@ -113,7 +113,7 @@ enum ImageThumbnail {
     }
 
     private final class Cancellation: Sendable {
-        let flag = Mutex(false)
+        let flag = OSAllocatedUnfairLock(initialState: false)
     }
 
     /// `terminate()` traps on a process that never launched, so the state has to be asked first.

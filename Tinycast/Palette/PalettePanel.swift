@@ -297,6 +297,6 @@ final class PalettePanel: NSPanel, AnimatedPanel {
     }
 
     override var canBecomeKey: Bool { true }
-    // The parent stays main while a menu is key, so its Liquid Glass remains active.
+    // The parent stays main while a menu is key, so its frost material remains active.
     override var canBecomeMain: Bool { true }
 }

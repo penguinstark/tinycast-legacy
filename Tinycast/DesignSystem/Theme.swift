@@ -95,8 +95,8 @@ enum Theme {
         /// Room above the search row, constant so typing never shifts the bar.
         static let headerPadding: CGFloat = 10
         static let compactHeight: CGFloat = headerHeight + headerPadding * 2
-        /// Native glass contours and interaction effects draw outside their layout bounds.
-        static let paletteGlassOutset: CGFloat = 4
+        /// Frosted contours and their interaction effects draw outside their layout bounds.
+        static let paletteFrostOutset: CGFloat = 4
         /// How close a dragged palette must be to the invisible vertical centre line.
         static let paletteSnapDistance: CGFloat = 8
         /// A restored position needs this much bar on a display to still be grabbable.
@@ -166,7 +166,7 @@ enum Theme {
         /// Five rows and half of the sixth, so a capped menu reads as scrollable, not clipped.
         static let menuVisibleRows: CGFloat = 5.5
         static let appMenuVisibleRows: CGFloat = 4.5
-        /// Rounded: a half-row of an odd pitch lands the glass edge on a half pixel.
+        /// Rounded: a half-row of an odd pitch lands the frost edge on a half pixel.
         static var menuRowsMaxHeight: CGFloat {
             (menuVisibleRows * (menuRowHeight + menuRowSpacing)).rounded()
         }
@@ -344,7 +344,7 @@ enum Theme {
         static let stagger: TimeInterval = 0.055
         /// A summon lands first; the buttons extrude once the window has arrived.
         static let revealDelay: TimeInterval = 0.12
-        /// The glyph surfaces once its glass has formed, and blurs in rather than popping.
+        /// The glyph surfaces once its frost has formed, and blurs in rather than popping.
         static let glyphDelay: TimeInterval = 0.24
         static let glyphFade: TimeInterval = 0.16
         static let glyphBlur: CGFloat = 4
@@ -532,7 +532,13 @@ enum Theme {
 }
 
 extension View {
-    func frosted(in shape: some Shape) -> some View {
-        glassEffect(.regular.interactive(), in: shape)
+    func frosted(in shape: some Shape, tint: Color? = nil) -> some View {
+        background {
+            FrostedBackgroundView()
+                .clipShape(shape)
+                .overlay {
+                    if let tint { shape.fill(tint) }
+                }
+        }
     }
 }

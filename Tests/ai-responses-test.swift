@@ -1,5 +1,5 @@
 import Foundation
-import Synchronization
+import os
 
 @main
 @MainActor
@@ -260,7 +260,7 @@ struct AIResponsesTests {
     }
 
     static func cancellationStopsTheNextTool() async {
-        let invoked = Mutex(0)
+        let invoked = OSAllocatedUnfairLock(initialState: 0)
         let base = ResponsesFixtureProvider(replies: [
             (try? completed(outputItems(callID: "first") + outputItems(callID: "second"))) ?? Data()
         ])
@@ -315,7 +315,7 @@ struct AIResponsesTests {
 
 final class ResponsesFixtureProvider: AIProvider, Sendable {
     private let replies: [Data]
-    private let recorded = Mutex<[AIRequest]>([])
+    private let recorded = OSAllocatedUnfairLock<[AIRequest]>(initialState: [])
     var requests: [AIRequest] { recorded.withLock { $0 } }
 
     init(replies: [Data]) {

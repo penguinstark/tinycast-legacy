@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// A picker's own window, so its glass samples the desktop exactly as the ⌘K menu's does.
+/// A picker's own window, so its frost samples the desktop exactly as the ⌘K menu's does.
 final class ExtensionListPanel: NSPanel {
     weak var paletteState: PaletteState?
 

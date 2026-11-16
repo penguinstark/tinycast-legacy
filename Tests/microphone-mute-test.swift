@@ -1,6 +1,6 @@
 import CoreAudio
 import Foundation
-import Synchronization
+import os
 
 @MainActor
 enum SystemActionRunner {}
@@ -33,7 +33,7 @@ private struct AudioFixture: Sendable {
     }
 }
 
-private let audio = Mutex(AudioFixture())
+private let audio = OSAllocatedUnfairLock(initialState: AudioFixture())
 
 // These module-local functions keep the shipped CoreAudio calls away from real hardware.
 func AudioObjectGetPropertyData(

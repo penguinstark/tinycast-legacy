@@ -138,7 +138,7 @@ The yellow and green traffic lights are disabled; double-clicking the free title
 unchanged window to the top-right of its current screen's visible area.
 
 The switcher is a borderless child window centred on its host and hung below the title bar, not an
-in-window screen — a note window may be 180pt tall, and the list must not be. It carries the same glass
+in-window screen — a note window may be 180pt tall, and the list must not be. It carries the same frost
 surface as a `PopoverMenu`, and its 240-point height is a ceiling rather than a size: the list reports
 its own height and the window shrinks to it with the top edge pinned. It travels with its host, dismisses
 like a popover when it resigns key, and closes outright when the last note goes. An empty query lists

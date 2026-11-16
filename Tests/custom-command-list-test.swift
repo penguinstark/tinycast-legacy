@@ -1,6 +1,6 @@
 import Observation
 import SwiftUI
-import Synchronization
+import os
 
 @main
 @MainActor
@@ -47,7 +47,7 @@ struct CustomCommandListTests {
         expect(filtered.actions(at: 0)?.header == first.name, "repeated reads do not refilter the snapshot")
         expect(screen().rows.map(\.id) == [second.id], "a new screen picks up the current query")
 
-        let changed = Mutex(false)
+        let changed = OSAllocatedUnfairLock(initialState: false)
         withObservationTracking {
             _ = screen()
         } onChange: {
@@ -66,7 +66,7 @@ struct CustomCommandListTests {
             EmptyResults.lastText == "No custom commands yet",
             "disabled-only libraries have no runnable rows")
 
-        let queryChanged = Mutex(false)
+        let queryChanged = OSAllocatedUnfairLock(initialState: false)
         withObservationTracking {
             _ = screen()
         } onChange: {

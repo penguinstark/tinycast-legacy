@@ -120,7 +120,7 @@ struct PopoverMenu: View {
     @State private var pointerSelection: Int?
 
     private var listInset: CGFloat { metrics.spacing.md }
-    /// One device pixel: a point-wide rule reads heavy against the glass.
+    /// One device pixel: a point-wide rule reads heavy against the frost.
     private var hairline: CGFloat { 1 / displayScale }
     var body: some View {
         let shape = SurfaceShape(
@@ -128,7 +128,7 @@ struct PopoverMenu: View {
             attachedRadius: metrics.size.menuButton / 2)
         surfaceContent
             .frame(width: width ?? metrics.size.actionMenuWidth)
-            .glassEffect(.regular, in: shape)
+            .frosted(in: shape)
             .clipShape(shape)
     }
 

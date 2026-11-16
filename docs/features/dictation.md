@@ -41,7 +41,7 @@ compilation of its 2-bit weights; Ultra's encoder and both variants' decoder/joi
   its temporary clipboard ownership, focus, secure-input and protected-target checks. Copy-only
   writes the plain transcript without reading the caret; paste-and-copy writes the persistent copy
   after delivery or a failed insertion.
-- The Liquid Glass capsule displays 21 fixed frequency bands driven by the microphone, sampled at
+- The frosted material capsule displays 21 fixed frequency bands driven by the microphone, sampled at
   most 20 times per second through a reused 512-point Accelerate transform on the capture queue.
   Logarithmic bands span 32–5000 Hz so speech sits nearer the middle. Smoothed levels taper and
   fade only toward the edges, without a center peak or mirroring.

@@ -315,7 +315,7 @@ macOS transitions stay visible.
 
 `AXEnhancedUserInterface` is cleared for the duration of the writes and restored immediately, because
 some apps reinterpret frame writes while it is on — but never while VoiceOver is running, which would
-break the screen reader. **This mitigation is inherited convention and unverified on macOS 26**; if a
+break the screen reader. **This mitigation is inherited convention and unverified on macOS 14**; if a
 stock Electron app tiles correctly without it, delete the helper rather than keep it.
 
 ## Switching Space

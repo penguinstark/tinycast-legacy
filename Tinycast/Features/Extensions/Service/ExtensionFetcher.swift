@@ -1,5 +1,5 @@
 import Foundation
-import Synchronization
+import os
 
 /// Bodies cross the bridge base64-encoded, so binary responses survive.
 final class ExtensionFetcher: Sendable {
@@ -198,7 +198,9 @@ enum ExtensionAsyncProcess {
     }
 
     /// Started by `enqueue` and not yet claimed by `wait`, keyed by pid.
-    private static let uncollected = Mutex<[Int32: (child: Child, watchdog: DispatchSourceTimer?)]>([:])
+    private static let uncollected = OSAllocatedUnfairLock<
+        [Int32: (child: Child, watchdog: DispatchSourceTimer?)]
+    >(initialState: [:])
 
     /// An app bundle inherits no login shell, so a bare `brew` would otherwise fail.
     static func resolveExecutable(_ command: String) -> URL? {

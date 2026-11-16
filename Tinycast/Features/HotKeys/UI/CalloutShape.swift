@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Rounded rect plus a rounded-tip triangle pointer, as one path so the glass lenses them together.
+/// Rounded rect plus a rounded-tip triangle pointer, as one path so the frost lenses them together.
 struct CalloutShape: Shape {
     let caretEdge: CalloutPlacement.CaretEdge
     let caretX: CGFloat

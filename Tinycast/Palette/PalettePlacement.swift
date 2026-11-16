@@ -4,7 +4,7 @@ import CoreGraphics
 enum PalettePlacement {
     static let maxSnapEntrySpeedPointsPerSecond: CGFloat = 600
 
-    /// The visible surface stays anchored while native glass draws outside its bounds.
+    /// The visible surface stays anchored while native frost draws outside its bounds.
     static func frame(at anchor: CGPoint, size: CGSize, outset: CGFloat) -> CGRect {
         CGRect(x: anchor.x, y: anchor.y - size.height, width: size.width, height: size.height)
             .insetBy(dx: -outset, dy: -outset)

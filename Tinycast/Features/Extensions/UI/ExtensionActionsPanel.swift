@@ -12,7 +12,7 @@ private struct Metrics {
     var listInset: CGFloat { interface.spacing.md }
     /// Five rows and half of the sixth, so a long panel reads as scrollable rather than clipped.
     var visibleRows: CGFloat { 5.5 }
-    /// Rounded: a fractional height lands the glass edge on a half pixel.
+    /// Rounded: a fractional height lands the frost edge on a half pixel.
     var rowsMaxHeight: CGFloat { (visibleRows * (rowHeight + rowSpacing)).rounded() }
     var headerHeight: CGFloat {
         interface.size.menuSectionHeader + interface.spacing.xs * 1.5 + rowSpacing
@@ -60,7 +60,7 @@ struct ExtensionActionsPanel: View {
     @State private var hoverSelection: Int?
 
     private var panel: Metrics { Metrics(interface: metrics) }
-    /// One device pixel: a point-wide rule reads heavy against the glass.
+    /// One device pixel: a point-wide rule reads heavy against the frost.
     private var hairline: CGFloat { 1 / displayScale }
 
     var body: some View {
@@ -90,7 +90,7 @@ struct ExtensionActionsPanel: View {
             return .handled
         }
         .frame(width: panel.width)
-        .glassEffect(.regular, in: shape)
+        .frosted(in: shape)
         .clipShape(shape)
     }
 

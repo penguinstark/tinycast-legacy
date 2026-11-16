@@ -93,7 +93,7 @@ struct NoteFormattingBar: View {
                 .zIndex(1)
         }
         .padding(Theme.Spacing.xs)
-        // Behind the buttons, not around them: glass clips content, tooltips draw outside it.
+        // Behind the buttons, not around them: frost clips content, tooltips draw outside it.
         .background { Capsule().fill(Color.clear).frosted(in: Capsule()) }
         .accessibilityElement(children: .contain)
         .accessibilityLabel("Formatting")

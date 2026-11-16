@@ -35,7 +35,7 @@ struct CompactBarGeometry {
     }
 }
 
-/// The compact bar's glass: a capsule the buttons bead off, with their glyphs drawn above it.
+/// The compact bar's frost: a capsule the buttons bead off, with their glyphs drawn above it.
 struct CompactBar: View {
     let commands: [CommandID]
     let selection: CommandID?
@@ -49,24 +49,21 @@ struct CompactBar: View {
         let geometry = CompactBarGeometry(metrics: metrics, count: commands.count)
         let revealed = isRevealed
         let capsule = Capsule(style: .continuous)
-        // One container, or the buttons could never bead off the capsule they come out of.
-        GlassEffectContainer(spacing: metrics.scaled(BarMotion.blend)) {
-            ZStack(alignment: .topLeading) {
-                capsule.fill(.clear)
-                    .frame(width: geometry.capsuleWidth(revealed: revealed))
-                    .frame(maxHeight: .infinity)
-                    .glassEffect(.regular, in: capsule)
-                    .animation(
-                        reduceMotion ? nil : BarMotion.capsule.delay(BarMotion.revealDelay),
-                        value: revealed)
-                ForEach(Array(commands.enumerated()), id: \.element) { index, command in
-                    button(command, at: index, geometry: geometry, revealed: revealed)
-                }
+        ZStack(alignment: .topLeading) {
+            capsule.fill(.clear)
+                .frame(width: geometry.capsuleWidth(revealed: revealed))
+                .frame(maxHeight: .infinity)
+                .frosted(in: capsule)
+                .animation(
+                    reduceMotion ? nil : BarMotion.capsule.delay(BarMotion.revealDelay),
+                    value: revealed)
+            ForEach(Array(commands.enumerated()), id: \.element) { index, command in
+                button(command, at: index, geometry: geometry, revealed: revealed)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .overlay { scrim(geometry: geometry, revealed: revealed) }
-        // Above the glass rather than inside it, where a morph would smear them.
+        // Above the frost rather than inside it, where a morph would smear them.
         .overlay(alignment: .topLeading) {
             ForEach(Array(commands.enumerated()), id: \.element) { index, command in
                 glyph(command, at: index, geometry: geometry, revealed: revealed)
@@ -91,10 +88,9 @@ struct CompactBar: View {
         .accessibilityLabel(command.name)
         .accessibilityAddTraits(selection == command ? [.isSelected] : [])
         .accessibilityHidden(!revealed)
-        .glassEffect(
-            .regular.tint(selection == command ? Theme.Colors.compactShortcutSelectionTint : nil)
-                .interactive(), in: .circle
-        )
+        .frosted(
+            in: .circle,
+            tint: selection == command ? Theme.Colors.compactShortcutSelectionTint : nil)
         .scaleEffect(revealed ? 1 : BarMotion.parkedScale)
         .position(revealed ? geometry.center(of: index) : geometry.parked)
         .allowsHitTesting(revealed)

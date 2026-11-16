@@ -55,7 +55,7 @@ private struct SelectionFollowing: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onScrollGeometryChange(for: Band.self) {
+            .onScrollGeometryRead(for: Band.self) {
                 Band(insetTop: $0.contentInsets.top, height: $0.containerSize.height)
             } action: { old, new in
                 band = new

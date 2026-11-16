@@ -50,7 +50,7 @@ private struct MissingFileStage: View {
     @Environment(\.metrics) private var metrics
     var body: some View {
         VStack(spacing: metrics.spacing.sm) {
-            Image(systemName: "doc.badge.exclamationmark")
+            Image(systemName: "doc.questionmark")
                 .font(.system(.largeTitle))
                 .symbolRenderingMode(.hierarchical)
             Text("File is no longer available")

@@ -392,7 +392,7 @@ private struct ExtensionSettingsIcon: View {
     }
 }
 
-/// A summary row, and while open its settings on an inset card — separators and fill, never glass.
+/// A summary row, and while open its settings on an inset card — separators and fill, never frost.
 private struct ExtensionDisclosure: View {
     let installed: InstalledExtension
     let isExpanded: Bool
@@ -786,7 +786,6 @@ private struct ExtensionPreferenceRow: View {
             SecureField("", text: $text, prompt: schema.placeholder.map(Text.init))
                 .textFieldStyle(.roundedBorder)
                 .labelsHidden()
-                .pointerStyle(.horizontalText)
                 .onChange(of: text) { _, value in save(value) }
         case .file, .directory, .appPicker:
             HStack(spacing: Theme.Spacing.sm) {
@@ -800,7 +799,6 @@ private struct ExtensionPreferenceRow: View {
             TextField("", text: $text, prompt: schema.placeholder.map(Text.init))
                 .textFieldStyle(.roundedBorder)
                 .labelsHidden()
-                .pointerStyle(.horizontalText)
                 .onChange(of: text) { _, value in save(value) }
         }
     }

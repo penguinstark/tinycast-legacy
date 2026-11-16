@@ -66,7 +66,6 @@ struct ExtensionGitHubPanel: View {
             Text("Repository").font(.callout.weight(.medium))
             TextField("", text: $repository, prompt: Text("owner/repo, or a link to the extension's folder"))
                 .extensionSettingsEditorTextField()
-                .pointerStyle(.horizontalText)
                 .disabled(isInstalling)
             if let source {
                 Text("Builds \(source.summary).")
@@ -156,7 +155,6 @@ private struct ExtensionToolchainFields: View {
                 Text("Custom search paths").font(.callout.weight(.medium))
                 TextField("", text: $searchPathsText, prompt: Text(verbatim: "~/.local/share/mise/shims"))
                     .extensionSettingsEditorTextField()
-                    .pointerStyle(.horizontalText)
                     .onChange(of: searchPathsText) { _, value in
                         settings.extensionCustomSearchPaths = Self.parseSearchPaths(value)
                     }

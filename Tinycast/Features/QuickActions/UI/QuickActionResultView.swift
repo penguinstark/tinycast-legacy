@@ -36,7 +36,7 @@ struct QuickActionResultView: View {
         .overlay(alignment: .bottom) { measured(footer) { footerHeight = $0 } }
         .frame(width: metrics.size.quickActionPanel, height: panelHeight)
         .background(Theme.Colors.panelScrim)
-        .background(GlassEffectView())
+        .background(FrostedBackgroundView())
         .clipShape(RoundedRectangle(cornerRadius: metrics.radius.dialog, style: .continuous))
         // Reported, not measured: the frame above is ours, so reading it back would feed itself.
         .onChange(of: panelHeight, initial: true) { onHeight(panelHeight) }

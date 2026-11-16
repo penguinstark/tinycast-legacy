@@ -18,7 +18,7 @@ extension DialogTone {
     }
 }
 
-/// Tinycast's Liquid Glass dialog, compact unless a native control needs more room.
+/// Tinycast's frosted dialog, compact unless a native control needs more room.
 struct DialogView: View {
     @Environment(\.metrics) private var metrics
     let request: DialogRequest
@@ -60,7 +60,7 @@ struct DialogView: View {
         .padding(metrics.spacing.dialogInset)
         .frame(width: width, alignment: .leading)
         .background(Theme.Colors.panelScrim, in: shape)
-        .background { Color.clear.glassEffect(.regular, in: shape) }
+        .background { Color.clear.frosted(in: shape) }
     }
 
     @ViewBuilder private var actions: some View {

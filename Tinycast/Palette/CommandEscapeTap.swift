@@ -1,6 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
-import Synchronization
+import os
 
 private func commandEscapeTapCallback(
     proxy: CGEventTapProxy, type: CGEventType, event: CGEvent,
@@ -66,7 +66,7 @@ final class CommandEscapeTap {
             var installation: Installation?
         }
 
-        private let state = Mutex(State())
+        private let state = OSAllocatedUnfairLock(initialState: State())
         private let onChord: @MainActor @Sendable () -> Void
 
         init(onChord: @escaping @MainActor @Sendable () -> Void) {

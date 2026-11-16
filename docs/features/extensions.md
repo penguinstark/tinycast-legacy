@@ -349,7 +349,7 @@ screens hold (see [palette.md](palette.md)).
   form's selection instead of the list's highlight.
 
   **The list is hosted in a window of its own**, `ExtensionListPanel`, exactly as the ⌘K menu is by
-  `MenuPanelController`. Glass samples what lies behind the window it is in, so a list drawn as an
+  `MenuPanelController`. A material samples what lies behind the window it is in, so a list drawn as an
   in-window overlay sampled the form and read as a different material however its fill was tuned.
   With its own borderless child panel it samples the desktop, and a picker and the actions menu are
   the same surface by construction rather than by matching. It keeps the panel's row pitch, icon
@@ -426,7 +426,7 @@ screens hold (see [palette.md](palette.md)).
   the flattened `ExtensionAction` list rather than the drawn rows, so ↵ and the panel fire the same
   one without resolving an icon per arrow key. Header accessory symbols use the same 14pt Medium
   monochrome treatment; their menus use the same extension-owned transition, anchored to the control.
-- **Feedback** — `showToast` replaces the current toast, a glass pill that takes the footer menu button's place and is
+- **Feedback** — `showToast` replaces the current toast, a frosted pill that takes the footer menu button's place and is
   lit by its style's colour. Hovering turns its mark into an ×, and clicking anywhere but its button dismisses it and
   gives the menu button back. A failure toast's button is always **Copy** (title and message); any other style shows
   the command's primary action; `showHUD` is a centred pill, and `confirmAlert`
@@ -966,9 +966,8 @@ nothing about extensions. It lends out only the pixel work (`displayPixel`, `art
 symbol tile both sit at `IconCache.artworkExtent` **0.83**. The gap is deliberate and optical, not a
 size correction — measured, all three paths already produce an identical 40pt box.
 
-Every macOS 26 app icon is a squircle with a glyph inside it, and the ground disappears into the
-palette, so only the glyph reads. A Raycast icon is a flat, fully saturated tile,
-so every pixel of it reads. At equal geometry the extension shouts, and fitting it smaller is what
+A macOS app icon carries its own ground, shading and edge treatment, so its silhouette already
+belongs on the palette. A Raycast icon is a flat, fully saturated tile, so every pixel of it reads. At equal geometry the extension shouts, and fitting it smaller is what
 makes the two match by eye. Shipped and fetched images take the same target, so an icon doesn't
 change size depending on where it came from. An inline `data:` image is the one exception and is never
 fitted: the extension that drew it has already sized it, and rasterizing would cost the vector.
@@ -995,7 +994,7 @@ stroke that appearance calls for.
 extra search terms the SF Symbols app matches on, so "coffee" finds `cup.and.saucer`. Reading it beats
 bundling a name list: the offer always matches the OS, with nothing to regenerate per release.
 
-Two filters apply, leaving ~6,500 of the 8,302 names on macOS 26:
+Two filters apply, leaving roughly two-thirds of the system catalogue on macOS 14:
 
 - **Apple's reserved marks** (`symbol_restrictions.strings`, ~600 symbols: iCloud, iPhone, AirPlay…),
   which may only refer to those products.

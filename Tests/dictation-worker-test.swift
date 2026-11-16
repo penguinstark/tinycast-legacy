@@ -1,6 +1,6 @@
 import CryptoKit
 import Foundation
-import Synchronization
+import os
 
 @main
 struct DictationWorkerTest {
@@ -116,7 +116,7 @@ struct DictationWorkerTest {
         try manager.createSymbolicLink(
             at: root.appending(path: preserved[3]),
             withDestinationURL: root.appending(path: "installed-model"))
-        let events = Mutex<[(received: Int64, total: Int64)]>([])
+        let events = OSAllocatedUnfairLock<[(received: Int64, total: Int64)]>(initialState: [])
         let destination = root.appending(path: DictationModel.redux.folderName)
         let started = AsyncStream<Void>.makeStream()
         DownloadFixture.state.withLock {
@@ -229,7 +229,7 @@ private final class DownloadFixture: URLProtocol, @unchecked Sendable {
         var corrupt = false
     }
 
-    static let state = Mutex(State())
+    static let state = OSAllocatedUnfairLock(initialState: State())
     static let content = Data(repeating: 65, count: 4096)
 
     override static func canInit(with request: URLRequest) -> Bool { request.url?.host == "dictation.test" }
