@@ -81,7 +81,7 @@ enum SettingsTab: CaseIterable, Identifiable {
         case .quickActions: return "wand.and.sparkles"
         case .dictation: return "waveform"
         case .fileSearch: return "doc.text.magnifyingglass"
-        case .notes: return "text.page"
+        case .notes: return "doc.plaintext"
         case .snippets: return "curlybraces"
         case .navigation: return "arrow.left.arrow.right"
         case .windowManagement: return "macwindow"

@@ -288,7 +288,7 @@ enum ExtensionImage {
         "crypto": "bitcoinsign.circle", "delete-document": "trash",
         "devices": "laptopcomputer.and.iphone", "dna": "atom", "droplets": "drop.fill",
         "edit-shape": "pencil.and.outline", "ellipsis-vertical": "ellipsis",
-        "emoji": "face.smiling", "emoji-sad": "face.dashed", "female": "figure.stand.dress",
+        "emoji": "face.smiling", "emoji-sad": "face.dashed", "female": "figure.stand",
         "film-strip": "film", "filter": "line.3.horizontal.decrease.circle",
         "fingerprint": "touchid", "footprints": "shoeprints.fill",
         "forward-filled": "forward.fill", "fountain-tip": "pencil.tip",
