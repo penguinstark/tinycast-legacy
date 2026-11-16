@@ -2,8 +2,8 @@
 
 Dictation is off by default. A user-selected global shortcut records from the chosen microphone,
 transcribes locally and sends the result through `TextInjector`. Parakeet Ultra (quality) and Redux
-(lightweight) support 25 languages. Qwen3-ASR 0.6B and 1.7B support 30 languages and 22 Chinese dialects.
-No model is bundled. The Settings pane downloads a pinned Core ML conversion on request.
+(lightweight) support 25 languages. No model is bundled. The Settings pane downloads a pinned Core ML
+conversion on request.
 
 Recognition uses Apple's Core ML and Accelerate, with no external library. Each model family has
 its own adapter inside the bundled helper; both variants share that family's implementation.
@@ -105,10 +105,8 @@ compilation of its 2-bit weights; Ultra's encoder and both variants' decoder/joi
   staging directories left by a crash or forced quit, without touching installed models or other files.
   A nonblocking file lock covers cleanup through publication, rejecting another download sharing
   the same cache root. Its empty lock file stays in place; macOS releases the lock on process exit.
-- An installed Qwen model exposes a language hint; Auto leaves language detection to the model. Parakeet
-  does not accept a language hint. Neither adapter exposes user vocabulary. Qwen prepares its fixed
-  prompts and supported language hints once, then retains only the tokenizer's decoding tables
-  and prepared tokens, not the BPE encoding rules.
+- Parakeet does not accept a language hint or expose user vocabulary. Qwen3-ASR was removed because its
+  decoder needs stateful Core ML inference, which arrives in macOS 15.
 - The `Model/` folder imports Foundation only. Context-sensitive spaces and capitalization are a
   pure decision driven by text around the caret. Capitalization adapts by default and can be disabled
   without disabling contextual spaces; if an app does not expose that context through

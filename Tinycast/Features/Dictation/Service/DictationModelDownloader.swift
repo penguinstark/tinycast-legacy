@@ -55,13 +55,6 @@ enum DictationModelDownloader {
         var files = try await manifest(
             repository: model.repository, revision: model.revision,
             components: model.components, baseURL: baseURL, using: session)
-        if model.isQwen {
-            files += try await manifest(
-                repository: "Qwen/Qwen3-ASR-0.6B",
-                revision: "5eb144179a02acc5e5ba31e748d22b0cf3e303b0",
-                components: ["vocab.json", "merges.txt"],
-                baseURL: baseURL, using: session)
-        }
         var total: Int64 = 0
         for (file, _) in files {
             let sum = total.addingReportingOverflow(file.size)

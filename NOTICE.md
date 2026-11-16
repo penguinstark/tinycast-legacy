@@ -7,17 +7,13 @@ also redistributes the third-party material recorded below, under the terms stat
 
 Tinycast's dictation code uses Apple's frameworks only. No speech model is bundled with the app.
 Optional downloads use Moondream's Parakeet Ultra and Redux, derived from NVIDIA Parakeet
-(CC BY 4.0), and Qwen3-ASR (Apache 2.0).
-Parakeet Core ML conversions are provided by FluidInference; Qwen conversions by UniMocha.
-Qwen's tokenizer resources come from Qwen/Qwen3-ASR-0.6B. The Apache 2.0 licence follows.
+(CC BY 4.0). Parakeet Core ML conversions are provided by FluidInference.
 
 - https://huggingface.co/moondream/parakeet-ultra
 - https://huggingface.co/moondream/parakeet-redux
 - https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
 - https://huggingface.co/FluidInference/parakeet-ultra-coreml
 - https://huggingface.co/FluidInference/parakeet-redux-coreml
-- https://huggingface.co/Qwen/Qwen3-ASR-0.6B
-- https://huggingface.co/Qwen/Qwen3-ASR-1.7B
 
 ```
                                  Apache License

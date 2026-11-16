@@ -73,28 +73,18 @@ struct DictationTest {
         check(DictationLanguage.english.displayName(locale: locale), "English")
         check(DictationLanguage.english.displayName(locale: Locale(identifier: "de_DE")), "Englisch")
         check(DictationLanguage.english.rawValue, "English")
-        check(DictationModel.qwenSmall.folderName, "qwen-0.6b")
-        check(DictationModel.qwenLarge.folderName, "qwen-1.7b")
-        for family in DictationModel.Family.allCases {
-            guard DictationModel.allCases.contains(where: { $0.family == family }) else {
-                fatalError("Every engine should expose at least one model")
-            }
-        }
         for model in DictationModel.allCases {
             guard !model.components.isEmpty, model.revision.count == 40,
                 model.requiredFiles.isSuperset(of: model.components)
             else {
                 fatalError("Model installation metadata is incomplete")
             }
-            if let configuration = model.parakeetConfiguration {
-                guard model.family == .parakeet, configuration.blankToken == 8192,
-                    configuration.encoderUsesGPU == (model == .redux),
-                    model.components.contains(configuration.joint + ".mlmodelc")
-                else {
-                    fatalError("Parakeet download and inference disagree")
-                }
-            } else if !model.isQwen {
-                fatalError("Missing Parakeet decoding configuration")
+            let configuration = model.parakeetConfiguration
+            guard configuration.blankToken == 8192,
+                configuration.encoderUsesGPU == (model == .redux),
+                model.components.contains(configuration.joint + ".mlmodelc")
+            else {
+                fatalError("Parakeet download and inference disagree")
             }
         }
         print("Dictation text formatting passed")

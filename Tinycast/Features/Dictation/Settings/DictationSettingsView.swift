@@ -84,24 +84,13 @@ struct DictationSettingsView: View {
                 }
 
                 Section {
-                    Picker(selection: familyBinding) {
-                        ForEach(DictationModel.Family.allCases) { family in
-                            Text(family.rawValue).tag(family)
-                        }
-                    } label: {
-                        SettingsRowTitle(.dictationModel, "Engine")
-                        Text(
-                            settings.dictationModel.family.summary + " · " + settings.dictationModel.coverage)
-                    }
                     Picker(selection: $settings.dictationModel) {
-                        ForEach(
-                            DictationModel.allCases.filter { $0.family == settings.dictationModel.family }
-                        ) { model in
+                        ForEach(DictationModel.allCases) { model in
                             Text(model.variantTitle).tag(model)
                         }
                     } label: {
                         SettingsRowTitle(.dictationModel, "Model")
-                        Text(settings.dictationModel.summary)
+                        Text(settings.dictationModel.summary + " · " + settings.dictationModel.coverage)
                     }
 
                     let installed = coordinator.models.isInstalled(settings.dictationModel)
@@ -127,18 +116,6 @@ struct DictationSettingsView: View {
                                         "dictation-model-installed", defaultValue: "Installed")
                                     : "Not installed")
                             Text(modelDescription)
-                        }
-                    }
-                    if settings.dictationModel.isQwen, installed {
-                        Picker(selection: languageBinding) {
-                            Text(LocalizedStringResource("dictation-language-auto", defaultValue: "Auto"))
-                                .tag("")
-                            Divider()
-                            ForEach(DictationLanguage.allCases) { language in
-                                Text(language.displayName(locale: .current)).tag(language.rawValue)
-                            }
-                        } label: {
-                            SettingsRowTitle(.dictationModel, "Language")
                         }
                     }
                 } header: {
@@ -230,22 +207,6 @@ struct DictationSettingsView: View {
         Binding(
             get: { settings.dictationMicrophone ?? "" },
             set: { settings.dictationMicrophone = $0.isEmpty ? nil : $0 })
-    }
-
-    private var familyBinding: Binding<DictationModel.Family> {
-        Binding(
-            get: { settings.dictationModel.family },
-            set: {
-                settings.dictationModel = $0 == .parakeet ? .redux : .qwenSmall
-            })
-    }
-
-    private var languageBinding: Binding<String> {
-        Binding(
-            get: { settings.dictationLanguage ?? "" },
-            set: {
-                settings.dictationLanguage = $0.isEmpty ? nil : $0
-            })
     }
 
     private var modelDescription: String {

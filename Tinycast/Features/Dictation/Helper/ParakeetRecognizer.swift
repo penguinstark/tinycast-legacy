@@ -11,9 +11,7 @@ final class ParakeetRecognizer {
     private static let windowSamples = 240_000
 
     init(directory: URL, model: DictationModel) throws {
-        guard let configuration = model.parakeetConfiguration else {
-            throw DictationInferenceError.incompatibleModel
-        }
+        let configuration = model.parakeetConfiguration
         preprocessor = try DictationTensor.load("Preprocessor", at: directory, units: .cpuOnly)
         encoder = try DictationTensor.load(
             "Encoder", at: directory,
