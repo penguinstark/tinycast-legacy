@@ -67,8 +67,11 @@ if [ "$emit_db" -eq 0 ]; then
     # Queue, logs and verdicts are shared by path, so a second suite in this $TMPDIR waits its turn.
     if [ -z "${TINYCAST_SUITE_LOCKED:-}" ]; then
         export TINYCAST_SUITE_LOCKED=1
-        lockf -k -t 0 "$BIN/suite.lock" true 2>/dev/null || echo "Waiting for the suite already running…" >&2
-        exec lockf -k "$BIN/suite.lock" "$SELF" "$@"
+        # `lockf` only ships from macOS 15; on 14 the suite simply runs without the gate.
+        if command -v lockf >/dev/null; then
+            lockf -k -t 0 "$BIN/suite.lock" true 2>/dev/null || echo "Waiting for the suite already running…" >&2
+            exec lockf -k "$BIN/suite.lock" "$SELF" "$@"
+        fi
     fi
     : > "$QUEUE"
     rm -f "$BIN"/*.failed "$BIN"/*.running
