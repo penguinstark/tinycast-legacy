@@ -42,7 +42,7 @@ struct ThinScrollbar: ViewModifier {
         content
             .scrollIndicators(.hidden)  // drop the native scroller (and its flash) entirely
             // Geometry drives the thumb's size/position, never its visibility.
-            .onScrollGeometryChange(for: Metrics.self) { geo in
+            .onScrollGeometryRead(for: Metrics.self) { geo in
                 Metrics(
                     offset: geo.contentOffset.y,
                     insetTop: geo.contentInsets.top,
@@ -53,9 +53,9 @@ struct ThinScrollbar: ViewModifier {
                 metrics = new
             }
             // Scrolling reveals the thumb (not the rail) and re-hides a beat after it stops; a thumb drag has no scroll phase, so its own handlers own visibility.
-            .onScrollPhaseChange { _, phase in
+            .onScrollActivityChange { active in
                 guard !isDragging else { return }
-                phase == .idle ? scheduleScrollStop() : beganScrolling()
+                active ? beganScrolling() : scheduleScrollStop()
             }
             .overlay(alignment: .topTrailing) { bar }
             // One tracking view over the whole trailing strip owns all pointer handling: transparent except over the thumb, where it takes the drag and forwards wheel events, and never flickers the rail the way a content-level hover did.

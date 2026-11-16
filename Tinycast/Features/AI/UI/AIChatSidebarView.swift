@@ -223,7 +223,6 @@ private struct ChatSearchField: View {
                 .textFieldStyle(.plain)
                 .labelsHidden()
                 .focused($focused)
-                .pointerStyle(.horizontalText)
             if !query.isEmpty {
                 Button {
                     query = ""

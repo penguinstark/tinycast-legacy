@@ -89,7 +89,7 @@ struct AIProvidersPanel: View {
             .padding(.vertical, Theme.Spacing.xl)
         }
         .frame(width: Theme.Size.aiProvidersPanel.width)
-        .settingsEditorPanelSurface(controlsOnGlass: false)
+        .settingsEditorPanelSurface(controlsOnFrost: false)
         .releasesFocusOnOutsideClick()
         .settingsEditorPanel(item: $editor) { target in
             AIConnectionEditorPanel(

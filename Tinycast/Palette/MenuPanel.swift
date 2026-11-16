@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// The ⌘K menu's own window, so glass renders against the desktop and nothing clips it.
+/// The ⌘K menu's own window, so frost renders against the desktop and nothing clips it.
 final class MenuPanel: NSPanel, AnimatedPanel {
     weak var paletteState: PaletteState?
     var onKeyDown: ((NSEvent) -> Bool)?

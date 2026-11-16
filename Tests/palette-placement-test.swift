@@ -46,7 +46,7 @@ struct PalettePlacementTests {
 
     static func main() {
         theDefaultPlacement()
-        glassDrawingClearance()
+        frostDrawingClearance()
         restoringOnItsOwnDisplay()
         offsetsFollowTheirDisplay()
         restoringPartlyOffscreen()
@@ -62,16 +62,16 @@ struct PalettePlacementTests {
 
     // MARK: - The untouched placement
 
-    static func glassDrawingClearance() {
+    static func frostDrawingClearance() {
         for interfaceSize in InterfaceSize.allCases {
             let size = interfaceSize.metrics.size
             let compactSize = CGSize(width: size.panelWidth, height: size.compactHeight)
             let expandedSize = CGSize(width: size.panelWidth, height: size.panelHeight)
             for anchor in [CGPoint(x: 250, y: 900), CGPoint(x: -1200, y: -80)] {
-                let outset = Theme.Size.paletteGlassOutset
+                let outset = Theme.Size.paletteFrostOutset
                 let compact = PalettePlacement.frame(at: anchor, size: compactSize, outset: outset)
-                expect(compact.width, compactSize.width + outset * 2, "glass has horizontal clearance")
-                expect(compact.height, compactSize.height + outset * 2, "glass has vertical clearance")
+                expect(compact.width, compactSize.width + outset * 2, "frost has horizontal clearance")
+                expect(compact.height, compactSize.height + outset * 2, "frost has vertical clearance")
                 expect(
                     PalettePlacement.anchor(of: compact, outset: outset) == anchor,
                     "the visible anchor survives the window outset")

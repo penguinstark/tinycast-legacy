@@ -1,6 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
-import Synchronization
+import os
 
 private struct InstallationGate: Sendable {
     let entered = DispatchSemaphore(value: 0)
@@ -25,7 +25,7 @@ private struct TapFixture {
     var touchedMainThread = false
 }
 
-private let fixture = Mutex(TapFixture())
+private let fixture = OSAllocatedUnfairLock(initialState: TapFixture())
 
 // Module-local overloads exercise the shipped worker without installing a global input filter.
 extension CGEvent {
@@ -123,7 +123,7 @@ struct CommandEscapeTapTests {
         _ index: Int, type: CGEventType = .keyDown,
         keyCode: Int = kVK_Escape, flags: CGEventFlags = .maskCommand
     ) -> Bool? {
-        let result = Mutex<Bool?>(nil)
+        let result = OSAllocatedUnfairLock<Bool?>(initialState: nil)
         let completed = DispatchSemaphore(value: 0)
         schedule(index) { record in
             let claimed = invoke(record, type: type, keyCode: keyCode, flags: flags)
@@ -176,7 +176,7 @@ struct CommandEscapeTapTests {
 
         let gate = InstallationGate()
         let completed = DispatchSemaphore(value: 0)
-        let claimedAfterClose = Mutex<Bool?>(nil)
+        let claimedAfterClose = OSAllocatedUnfairLock<Bool?>(initialState: nil)
         let beforeClose = enables(1)
         schedule(1) { record in
             gate.entered.signal()

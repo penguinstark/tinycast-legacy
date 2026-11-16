@@ -80,9 +80,9 @@ struct ChatTranscriptView: View {
                 .frame(maxWidth: .infinity)
             }
             .modifier(TranscriptScrollChrome(surface: surface))
-            // Reopened chats start at the latest message; other anchor roles fight the reader.
-            .defaultScrollAnchor(.bottom, for: .initialOffset)
-            .onScrollGeometryChange(for: ScrollMark.self) { geometry in
+            // Reopened chats start at the latest message.
+            .defaultScrollAnchor(.bottom)
+            .onScrollGeometryRead(for: ScrollMark.self) { geometry in
                 ScrollMark(
                     offset: geometry.contentOffset.y,
                     container: geometry.containerSize.height,
@@ -166,7 +166,7 @@ private struct ResumeFollowingButton: View {
                 .font(metrics.typography.rowTrailing)
                 .foregroundStyle(Theme.Colors.textSecondary)
                 .frame(width: metrics.size.chatJumpToLatest, height: metrics.size.chatJumpToLatest)
-                .background(.ultraThinMaterial, in: Circle())
+                .frosted(in: Circle())
                 .overlay(Circle().strokeBorder(Theme.Colors.border))
                 .contentShape(Circle())
         }

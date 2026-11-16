@@ -1,7 +1,7 @@
 import AppKit
 import Carbon.HIToolbox
 @preconcurrency import IOKit.hidsystem
-import Synchronization
+import os
 
 // Snapshot the mutable C global `mach_task_self_`, so actor code never reads it raw.
 private let machTaskSelf = mach_task_self_
@@ -171,14 +171,14 @@ final class HyperKeyTap {
             var isRunning = true
         }
 
-        private let state: Mutex<State>
+        private let state: OSAllocatedUnfairLock<State>
         private let deliver: @MainActor @Sendable (HyperKeyRoute, HyperKeyEngine.Effect) -> Void
 
         init?(
             engine: HyperKeyEngine,
             deliver: @escaping @MainActor @Sendable (HyperKeyRoute, HyperKeyEngine.Effect) -> Void
         ) {
-            state = Mutex(State(engine: engine))
+            state = OSAllocatedUnfairLock(initialState: State(engine: engine))
             self.deliver = deliver
             let events: CGEventMask =
                 (1 << CGEventType.keyDown.rawValue)

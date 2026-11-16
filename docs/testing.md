@@ -444,12 +444,12 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
   of the capsule's end, the last one never clipped at the window's edge; with Show animations off they
   appear in place. Mouse and keyboard activation open the command immediately, without a fuse,
   delayed reveal or shortcut shapes beneath the expanded panel. Show Notes opens its window
-- Compact mode: arrow navigation tints the selected glass circle and uses a white monochrome glyph;
+- Compact mode: arrow navigation tints the selected frosted circle and uses a white monochrome glyph;
   inspect its native contour at actual size in both appearances, without a second fill or stroke;
   the left capsule and rightmost button must remain whole through opening, hovering, and selection,
   and expanding/collapsing after a drag must preserve the visible bar’s top-left position;
   Emoji & Symbols uses the same outlined glyph as the launcher in both Light and Dark
-- Verify compact selection in the live glass compositor in both appearances; an offscreen view bitmap
+- Verify compact selection in the live material compositor in both appearances; an offscreen view bitmap
   omits the material and cannot prove selection contrast
 - Compact Shortcuts settings: command names sit beside their icons; replacement menus and borderless
   move/remove controls work without stretching the labels across the row
@@ -765,7 +765,7 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
 - The browse list fades only at its bottom edge and rests opaque once it reaches the end
 - Quitting inside the debounce window saves the last edit
 - Over a light desktop, the corner matches the palette's, the shadow follows it, and no dark edge shows
-  around the glass controls
+  around the frosted controls
 
 ### Snippets
 

@@ -58,7 +58,7 @@ struct MessageHUDView: View {
         .fixedSize()
         .background { glow }
         .background(hovered ? Theme.Colors.controlHover : Theme.Colors.panelScrim)
-        .background(GlassEffectView())
+        .background(FrostedBackgroundView())
         .clipShape(Capsule())
         .overlay { rim }
     }
@@ -112,7 +112,7 @@ struct MessageHUDView: View {
                 .foregroundStyle(tone.tint)
         case .progress:
             // A `ProgressView` spinner is drawn by AppKit and ignores every tint it is given.
-            Image(systemName: "progress.indicator")
+            Image(systemName: "circle.dotted")
                 .foregroundStyle(Theme.Colors.progress)
                 .symbolEffect(.variableColor.iterative.dimInactiveLayers.nonReversing)
         }

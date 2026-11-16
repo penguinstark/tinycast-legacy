@@ -1,5 +1,5 @@
 import AppKit
-import Synchronization
+import os
 import UniformTypeIdentifiers
 
 struct IconCacheGeneration {
@@ -106,7 +106,7 @@ enum IconCache {
         cache.totalCostLimit = 8 * 1024 * 1024
         return cache
     }()
-    private static let fittedGeneration = Mutex(IconCacheGeneration())
+    private static let fittedGeneration = OSAllocatedUnfairLock(initialState: IconCacheGeneration())
 
     /// Cache-only lookups (never decode) so a row can paint an already-warm icon on the same frame.
     static func cached(forFile path: String, stamp: Int = 0, size: IconSize? = nil) -> NSImage? {
@@ -120,7 +120,7 @@ enum IconCache {
     }
 
     /// Tiles rasterize off-main, where a dynamic `NSColor` resolves wrong, so carry the surface.
-    private static let darkSurface = Mutex(true)
+    private static let darkSurface = OSAllocatedUnfairLock(initialState: true)
 
     /// Only a real change invalidates: most `effectiveAppearance` notifications do not move it.
     @MainActor static func setDarkSurface(_ isDark: Bool) {
@@ -135,7 +135,7 @@ enum IconCache {
     @MainActor static let style = IconStyleSignal()
 
     /// The same count, readable off-main because every cache key carries it.
-    private static let styleGeneration = Mutex(0)
+    private static let styleGeneration = OSAllocatedUnfairLock(initialState: 0)
 
     /// For icons resolved synchronously in `body`: the read *is* the subscription, so not a no-op.
     @MainActor static func observeStyle() { _ = style.generation }

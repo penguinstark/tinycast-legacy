@@ -125,9 +125,9 @@ struct ExtensionPickerField: View {
             )
             .onChange(of: open) { palette.noteControlListOpen(open) }
             .onChange(of: query) { typedAt = Date() }
-            .onScrollVisibilityChange { if !$0 { close() } }
             .onChange(of: palette.controlListDismissToken) { close() }
-            .onDisappear { if open { palette.noteControlListOpen(false) } }
+            // A lazy row that scrolls out is torn down, so this is also its off-screen close.
+            .onDisappear { close() }
             .onChange(of: focus) { _, focus in
                 if focus != index { close() }
             }

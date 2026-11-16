@@ -1,5 +1,5 @@
 import Foundation
-import Synchronization
+import os
 
 @MainActor
 final class CodexAppServerClient {
@@ -473,10 +473,10 @@ final class CodexAppServerClient {
 /// A server that stops reading must block this queue, never the main actor and its timeouts.
 private final class CodexInputWriter: Sendable {
     final class Write: Sendable {
-        private let data: Mutex<Data?>
+        private let data: OSAllocatedUnfairLock<Data?>
 
         init(_ data: Data) {
-            self.data = Mutex(data)
+            self.data = OSAllocatedUnfairLock(initialState: data)
         }
 
         func take() -> Data? {

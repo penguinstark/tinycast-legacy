@@ -47,7 +47,7 @@ struct RootPaletteView: View {
     /// Compact vs. full; the source of truth is on `AppCore`, so the two can't disagree.
     private var isCollapsed: Bool { core.paletteCoordinator.paletteIsCollapsed }
 
-    private var renderingOutset: CGFloat { isCollapsed ? Theme.Size.paletteGlassOutset : 0 }
+    private var renderingOutset: CGFloat { isCollapsed ? Theme.Size.paletteFrostOutset : 0 }
 
     private var screen: any PaletteScreen {
         switch vm.mode {
@@ -222,7 +222,7 @@ struct RootPaletteView: View {
             items: [
                 PopoverMenuItem(
                     title: String(localized: "Changelog"),
-                    systemImage: "clock.arrow.trianglehead.2.counterclockwise.rotate.90"
+                    systemImage: "clock.arrow.circlepath"
                 ) {
                     if let url = URL(string: "https://tinycast.dev/changelog/") {
                         openURL(url)
@@ -351,12 +351,11 @@ struct RootPaletteView: View {
                         installHeaderArrowHandler(in: $0)
                     }
                 )
-                // The window's frame is the size source, so the glass and clip stay matched.
+                // The window's frame is the size source, so the material and clip stay matched.
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .background(isCollapsed ? .clear : Theme.Colors.panelScrim)
-                // Square, as rounded glass feathers its edge; the clip alone cuts a crisp corner.
                 .background {
-                    Color.clear.glassEffect(isCollapsed ? .identity : .regular, in: Rectangle())
+                    if !isCollapsed { FrostedBackgroundView() }
                 }
                 .overlay {
                     Theme.Colors.dialogDimming
@@ -729,7 +728,7 @@ struct RootPaletteView: View {
             // The field stops where the capsule will, so it never runs under a button.
             .frame(width: compactCapsuleWidth)
             .frame(maxWidth: .infinity, alignment: .leading)
-            // Behind the row, which a glass container would otherwise paint over.
+            // Behind the row, which a material layer would otherwise paint over.
             .background(alignment: .topLeading) {
                 if isCollapsed {
                     CompactBar(

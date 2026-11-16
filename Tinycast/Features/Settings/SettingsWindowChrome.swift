@@ -9,7 +9,7 @@ final class SettingsWindowChrome: WindowChrome {
         window.toolbarStyle = .unified
         // `.automatic` draws a hairline once content scrolls under the bar, splitting the surface.
         window.titlebarSeparatorStyle = .none
-        // Transparent opts the titlebar out of the system's glass band; Settings wants it drawn.
+        // Transparent opts the titlebar out of the system's material band; Settings wants it drawn.
         window.titlebarAppearsTransparent = false
         // Stock Settings isn't dragged by its content — a drag on a `Form` shouldn't move the window.
         window.isMovableByWindowBackground = false

@@ -17,7 +17,6 @@ struct RevealableSecureField: View {
             if isRevealed {
                 TextField(title, text: $text, prompt: prompt)
                     .autocorrectionDisabled()
-                    .writingToolsBehavior(.disabled)
                     .focused($focusedField, equals: .plain)
             } else {
                 SecureField(title, text: $text, prompt: prompt)

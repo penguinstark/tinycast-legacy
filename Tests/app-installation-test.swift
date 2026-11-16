@@ -1,8 +1,8 @@
 import AppKit
 import Observation
-import Synchronization
+import os
 
-private let receivedWorkspaceLaunch = Mutex(false)
+private let receivedWorkspaceLaunch = OSAllocatedUnfairLock(initialState: false)
 
 @main
 @MainActor

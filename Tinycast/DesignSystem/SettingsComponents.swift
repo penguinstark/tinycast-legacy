@@ -195,9 +195,9 @@ extension View {
         modifier(SettingsEditorTextArea(height: height))
     }
 
-    /// `controlsOnGlass: false` draws the glass behind, so a control keeps its accent colour.
-    func settingsEditorPanelSurface(controlsOnGlass: Bool = true) -> some View {
-        modifier(SettingsEditorPanelSurface(controlsOnGlass: controlsOnGlass))
+    /// `controlsOnFrost: false` draws the frost behind, so a control keeps its accent colour.
+    func settingsEditorPanelSurface(controlsOnFrost: Bool = true) -> some View {
+        modifier(SettingsEditorPanelSurface(controlsOnFrost: controlsOnFrost))
     }
 
     /// The one place that says hiding a row from the launcher never unbinds its shortcut.
@@ -277,21 +277,21 @@ private struct SettingsEditorTextArea: ViewModifier {
 }
 
 private struct SettingsEditorPanelSurface: ViewModifier {
-    let controlsOnGlass: Bool
+    let controlsOnFrost: Bool
 
     @ViewBuilder
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(cornerRadius: Theme.Radius.panel, style: .continuous)
-        // In front of the glass: a glass fill is hit-testable and would hide a handle behind it.
+        // In front of the frost: a material fill is hit-testable and would hide a handle behind it.
         let draggable = content.background(WindowDragBackground())
-        if controlsOnGlass {
+        if controlsOnFrost {
             draggable
                 .background(Theme.Colors.panelScrim, in: shape)
-                .glassEffect(.regular, in: shape)
+                .frosted(in: shape)
         } else {
             draggable
                 .background(Theme.Colors.panelScrim, in: shape)
-                .background { Color.clear.glassEffect(.regular, in: shape) }
+                .background { Color.clear.frosted(in: shape) }
         }
     }
 }
@@ -349,7 +349,6 @@ struct SettingsFilterField: View {
                 .textFieldStyle(.plain)
                 .labelsHidden()
                 .focused($focused)
-                .pointerStyle(.horizontalText)
             if !query.isEmpty {
                 Button {
                     query = ""

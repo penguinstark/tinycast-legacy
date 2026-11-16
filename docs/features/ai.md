@@ -108,7 +108,7 @@ bottom with the model picker. ⌘J hands a Quick AI conversation to the window.
   result, and `displayTitle` prefers a rename, then this, then the first question.
 - **A reply's links are its sources.** `ChatReferences.extract` gathers the web links of a finished
   reply — Markdown links by their own names, bare URLs by host and path — in the order cited, one
-  per page, skipping code, and both surfaces list them under the reply as glass capsules, each led
+  per page, skipping code, and both surfaces list them under the reply as frosted capsules, each led
   by its number, that open in the browser and share `chatChip()` with the suggested replies. The same numbers close the sentence that cited each source, as a raised,
   linked `[n]`: `ChatCitations` finds each link's sentence end in the drawn text and inserts after
   it, two sources in one sentence sharing it, so prose and chips always agree. The preamble asks the model to link a page it relies on inline, so a cited
@@ -138,7 +138,7 @@ bottom with the model picker. ⌘J hands a Quick AI conversation to the window.
   sometimes wraps that label in a bare fence of its own and adds a stray one after the list, so the
   bare fence right on the label and any fence closing or trailing the list go with them, and no
   empty code box is left behind. A label inside a fence with a language, or any other open code
-  block, is code and stays. `ChatSuggestionChips` draws the options as glass capsules in a
+  block, is code and stays. `ChatSuggestionChips` draws the options as frosted capsules in a
   leading-aligned `ChatFlowLayout`: in the window they rise out of the composer, sitting on its top edge until the reader starts typing; in Quick AI they close the
   transcript. A click sends the option as the reader's next message, through the same `send` a
   typed one takes. Older replies lose their chips, since only the last question is still open. It is text in, text out, so it
@@ -496,7 +496,7 @@ and the Actions menu's own chords, and dies with the window.
   an I-beam there; its `mouseMoved` and `cursorUpdate` set the arrow unless the window's hit test
   lands on the text itself. Thinking folds, search
   and tool rows stay separate views, so a drag spans one segment's text. A fold holding a match
-  opens. A glass counter at the transcript's top edge says "3 of 17" with the same steps as
+  opens. A frosted counter at the transcript's top edge says "3 of 17" with the same steps as
   Return / ⇧↩ in the field and ⌘G / ⇧⌘G anywhere. The sidebar's own filter is still there, by click.
 - **Math is typeset natively, in that same text.** `\(…\)` and `$…$` are inline math, `\[…\]` and
   `$$…$$` display math. `MarkdownMath` finds them before Foundation's Markdown parse, which would
@@ -551,9 +551,9 @@ and the Actions menu's own chords, and dies with the window.
   at `aiChatReadingWidth`. The last finished reply offers Regenerate beside Copy: `AIChatState`
   drops only a trailing reply and asks again with the question and its attachments, of whichever
   model is selected now.
-- **Composer** (`AIChatDetailView`): one pane of untinted Liquid Glass at `Radius.dialog`, stacked
+- **Composer** (`AIChatDetailView`): one pane of untinted frosted material at `Radius.dialog`, stacked
   under the transcript rather than floated over it, holding the staged files, the text and one row of
-  controls, the glass on a background layer.
+  controls, the frost on a background layer.
   The title bar keeps the system's own band, as a native document window's does.
   Transcript text runs `spacing.chatLine` apart, both surfaces. `ChatComposerTextView` is an `NSTextView`, not a `TextEditor`: its delegate sees
   `insertNewline:` only outside input-method composition, so Return sends and ⇧↩ or ⌥↩ breaks the
@@ -570,7 +570,7 @@ and the Actions menu's own chords, and dies with the window.
   `ChatSession.historyBytes` against Tinycast's history budget otherwise — orange from 80%, red at
   100%. Hovering it raises Tinycast's own card (never a popover), drawn inside the transcript's
   frame at its bottom edge — just above the composer and inside the window whatever its size — and
-  solid under its glass so the transcript cannot show through. `ChatContextReport`
+  solid under its frost so the transcript cannot show through. `ChatContextReport`
   lays it out: tokens in context of the window, input with its cached share, output with its
   thinking share and cost; then what the next message sends — model, history of budget, messages
   sent of total, staged files, and whether the system prompt, web search and tools ride along. The model and reasoning menus are this chat's, as Quick AI's header is Quick AI's. Files arrive by ⌘V, a drop anywhere on the pane, or Attach Files…, and all three take
@@ -691,7 +691,7 @@ window, and every chat action either surface sends — is the nineteenth feature
 - A long reply streams with the transcript pinned to its end, through a growing composer, a window
   resize and the chips arriving; scrolling up stops it at once, and Jump to Latest resumes it.
 - A reasoning fold ends on its last line of text, with no empty stretch under it, in both surfaces.
-- Suggested replies are leading-aligned glass capsules, and wrapped rows start at the same edge.
+- Suggested replies are leading-aligned frosted capsules, and wrapped rows start at the same edge.
   Source chips under a cited reply match them, the number first in its own disc.
 - A failed reply keeps what was written in the normal colour; only the closing note is red.
 - Code blocks have rounded corners, in Dark and Light, and are coloured: ask for a snippet each in
@@ -1020,9 +1020,9 @@ control (`AIProviderTab`), and the chosen page is kept from one provider to the 
   on. A name Tinycast sets itself says its value is not used.
 
 An API connection has the first two pages. The
-panel draws its Liquid Glass behind its content rather than around it
-(`settingsEditorPanelSurface(controlsOnGlass: false)`), because the page control sits directly on the
-surface and a segmented control drawn on glass loses its accent colour.
+panel draws its frosted material behind its content rather than around it
+(`settingsEditorPanelSurface(controlsOnFrost: false)`), because the page control sits directly on the
+surface and a segmented control drawn on a material loses its accent colour.
 
 The signed-in Codex or Claude address is the one thing on the pane that names a person, and a Settings pane
 is what gets screenshotted into a bug report or left on screen in a recording, so `RedactedText`

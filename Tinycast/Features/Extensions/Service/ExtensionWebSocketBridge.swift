@@ -1,5 +1,5 @@
 import Foundation
-import Synchronization
+import os
 
 /// One `URLSessionWebSocketTask` per socket, read by the single `receive` JS keeps in flight.
 final class ExtensionWebSocketBridge: NSObject, Sendable, URLSessionWebSocketDelegate {
@@ -8,8 +8,9 @@ final class ExtensionWebSocketBridge: NSObject, Sendable, URLSessionWebSocketDel
         var opening: CheckedContinuation<String, Error>?
     }
 
-    private let connections = Mutex<[Int: Connection]>([:])
-    private let sessionBox = Mutex<URLSession?>(nil)
+    private let connections = OSAllocatedUnfairLock<[Int: Connection]>(
+        initialState: [:])
+    private let sessionBox = OSAllocatedUnfairLock<URLSession?>(initialState: nil)
 
     enum SocketError: LocalizedError {
         case badURL(String)

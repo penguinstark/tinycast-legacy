@@ -187,7 +187,7 @@ where a bare ⇧ combo would shadow typing.
 into the ⌃⌥(⇧)⌘ chord system-wide. It owns the lifecycle and policy. `HyperKeyEngine` decides
 transitions; `HyperKeyTap` owns a **modifying** `CGEventTap` at the HID level, a separate layer from
 `HotKeyCenter` because Carbon cannot intercept a lone key at all. The tap is served by its own thread,
-`com.tinycast.hyper-key`, with the engine behind a `Mutex` — the shape `CommandEscapeTap` uses — so a
+`com.tinycast.hyper-key`, with the engine behind an `OSAllocatedUnfairLock` — the shape `CommandEscapeTap` uses — so a
 busy main thread never delays typing or times the tap out. The rewritten flags flow onward into Carbon
 matching, so existing combo hotkeys fire from Hyper+key with no extra registration.
 

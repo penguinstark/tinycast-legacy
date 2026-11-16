@@ -245,7 +245,7 @@ match the visible row order**, including the card at index 0 when present — th
 ## The compact bar
 
 Compact is the default window mode; a stored choice of Expanded is kept. It is the launcher with an
-empty query, drawn as glass shapes over a bare window: the header row in a capsule, then one round
+empty query, drawn as frosted shapes over a bare window: the header row in a capsule, then one round
 button per configured `AppSettings.compactBarCommands` entry whose feature
 `AppIndex.isCommandEnabled` reports on. General settings shows **Compact Shortcuts** only
 when Compact is selected: an ordered list of zero to four unique commands, with add, replace,
@@ -263,18 +263,18 @@ selected button. Typing, pasting or clicking Search resets the selection. The Ap
 boundary-arrow hook handles navigation without moving input focus away from Search; marked IME text
 and modified arrows retain their normal editing behavior.
 
-Keyboard selection tints the existing glass circle and draws its glyph in white. Symbols use
+Keyboard selection tints the existing frosted circle and draws its glyph in white. Symbols use
 `SymbolImage`, including the appearance-aware outline for Emoji & Symbols. Settings keeps each icon
 beside its name in a command menu, with borderless move/remove controls at the trailing edge.
-The system glass material draws the selected face and contour together; no fill or stroke is painted
-over it. The glyph stays above `GlassEffectContainer` so a morph cannot smear it.
+The material draws the selected face; the tint is layered over it and no stroke is painted. The glyph
+stays above the capsule so the reveal cannot smear it.
 
 Mouse and keyboard activation synchronously call `LauncherCoordinator.runCommand` in a transaction
 with animations disabled. No merge animation or delayed activation survives beneath the destination
 screen. Palette screens push over root search as before; Show Notes closes the palette and opens
 its existing window. The summon reveal still animates independently.
 The compact bar lays `panelScrim` over its capsule and buttons through a mask that follows the
-reveal, as the expanded panel lays it over its glass; the selected button stays out of the mask so
+reveal, as the expanded panel lays it over its frost; the selected button stays out of the mask so
 its tint reads undimmed.
 
 At expanded launcher root, Escape clears the query while setting `forceExpanded`, so clearing and
@@ -283,8 +283,8 @@ Menus and argument fields still take precedence, and sub-screen navigation keeps
 A summon clears `forceExpanded` whenever the field is empty, so a launcher Pop to Root Search
 restores still opens as the bar; a kept query, screen or extension restores expanded as before.
 
-The glass is a background of the header, not a wrapper around it: the field keeps its one structural
-position, and a container never paints its merged glass over the row. While compact the row is
+The material is a background of the header, not a wrapper around it: the field keeps its one structural
+position, and nothing paints its blur over the row. While compact the row is
 narrowed to the capsule, and so is the top drag strip, so neither reaches under a button. The dialog
 dimming is skipped while compact, since the window between the shapes is transparent and a dimming
 layer would fill it. See [ui.md](../ui.md#panel-structure) for the shapes and the reveal.
@@ -294,7 +294,7 @@ layer would fill it. See [ui.md](../ui.md#panel-structure) for the shapes and th
 `PaletteWindowController` resolves the visible content anchor (left edge + top edge) **once per summon** and reuses it
 for every compact↔expanded resize, so only the height changes and the top edge never drifts. The
 anchor is dropped on hide, so the next summon re-resolves for wherever the user is then.
-The compact window adds a four-point transparent drawing margin for the native glass rim.
+The compact window adds a four-point transparent drawing margin for the floating shapes’ edge.
 Its content remains at the same anchor; dragging and snapping convert back to that visible anchor.
 
 All of the arithmetic lives in `PalettePlacement`, which is CoreGraphics-only and takes every screen
@@ -539,7 +539,7 @@ width; their hover keeps the shared 10pt menu-row corner.
 A menu is **not** an overlay inside the palette: `MenuPanelController` hosts it in a `MenuPanel`, a
 borderless non-activating `NSPanel` added as a **child window** of the palette's, which is what makes
 it follow a palette drag and vanish with it. `PalettePanel.orderOut` detaches every child first,
-because a child ordered out along with its parent skips its next open animation. Glass renders against the desktop rather than inside an
+because a child ordered out along with its parent skips its next open animation. A material renders against the desktop rather than inside an
 already-blurred, clipped panel, and no menu can be cropped by `RootPaletteView`'s `clipShape` however
 long it grows. The menu temporarily becomes key so its native `TextField` owns the caret and selection, while
 `MenuPanel` hands navigation and action shortcuts back to `RootPaletteView`. It restores key status
