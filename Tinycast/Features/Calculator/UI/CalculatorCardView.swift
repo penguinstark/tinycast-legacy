@@ -91,7 +91,7 @@ private struct RatesFreshness: View {
                 )
                 .labelStyle(.iconOnly)
                 .buttonStyle(.plain)
-                .symbolEffect(.rotate, options: .repeat(.continuous), isActive: currencyRates.isRefreshing)
+                .symbolEffect(.pulse, options: .repeat(.continuous), isActive: currencyRates.isRefreshing)
                 .foregroundStyle(hovered ? .secondary : .tertiary)
                 .onHover { hovered = $0 }
                 .help("Refresh Exchange Rates")
