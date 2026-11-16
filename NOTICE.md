@@ -15,7 +15,6 @@ Optional downloads use Moondream's Parakeet Ultra and Redux, derived from NVIDIA
 - https://huggingface.co/FluidInference/parakeet-ultra-coreml
 - https://huggingface.co/FluidInference/parakeet-redux-coreml
 
-
 ## Brand marks — `Tinycast/Assets.xcassets/AIBrand*.imageset`
 
 Sixteen monochrome template SVGs, ~300 B–2 KB each, drawn beside a model's name in the model
