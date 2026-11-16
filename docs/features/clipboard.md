@@ -176,7 +176,7 @@ and loads no extracted strings. Existing derived data stays on disk when disable
 reenabling; deletion and retention still remove it with its original item.
 
 When both clipboard history and text search are enabled, `AppCore` creates its
-`ClipboardTextIndexer`. It recognizes locally with Vision's `RecognizeTextRequest`, starting one
+`ClipboardTextIndexer`. It recognizes locally with Vision's `VNRecognizeTextRequest`, starting one
 background-priority job after two seconds without input, even while the palette is open. A 250 ms
 pause separates items; continued typing or mouse movement defers the next job. Existing and imported
 history is backfilled, including rows beyond the resident window. Nothing recognizes on the capture
