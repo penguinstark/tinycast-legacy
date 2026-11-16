@@ -2,7 +2,7 @@ name: Tinycast
 options:
   bundleIdPrefix: com.tinycast
   deploymentTarget:
-    macOS: "14.0"
+    macOS: "14.4"
   createIntermediateGroups: true
   developmentLanguage: en
   groupSortPosition: top

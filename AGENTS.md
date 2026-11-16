@@ -8,8 +8,8 @@ dependencies.
 
 ## Posture: macOS 14 floor
 
-**Tinycast Sonoma supports macOS 14 and later.** Swift 6+ with complete strict concurrency is
-required. Prefer APIs available on macOS 14, and verify availability before adopting a newer one.
+**Tinycast Sonoma supports macOS 14.4 and later.** Swift 6+ with complete strict concurrency is
+required. Prefer APIs available on macOS 14.4, and verify availability before adopting a newer one.
 
 Prefer current APIs and language features that the 14 floor allows:
 
@@ -26,7 +26,7 @@ Prefer current APIs and language features that the 14 floor allows:
 - **A deprecated API is a defect**, not a warning to live with.
 - **Verify API and language-feature availability** against the macOS 14 SDK and the compiler used by
   the build and CI. Do not ship an API newer than the floor without an explicit availability check.
-- **No compatibility layers or speculative fallbacks.** No support below macOS 14. Migration code lives only in
+- **No compatibility layers or speculative fallbacks.** No support below macOS 14.4. Migration code lives only in
   `Tinycast/Migrations/` and is deleted after one stable release ([migrations.md](docs/migrations.md)).
 
 Carbon is a deliberate capability-gap dependency rather than inertia: nothing modern registers a
