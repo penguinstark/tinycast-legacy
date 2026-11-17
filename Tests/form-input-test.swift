@@ -215,7 +215,7 @@ struct FormInputTests {
         let value = "Avant 👋{date} après"
         let caret = value.index(value.startIndex, offsetBy: 13)
         draft.text = value
-        draft.selection = TextSelection(range: caret..<caret)
+        draft.selection = FormTextSelection(range: caret..<caret)
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.01))
         hosting.layoutSubtreeIfNeeded()
         expect(
@@ -275,7 +275,7 @@ struct FormInputTests {
     @Observable
     final class Draft {
         var text = ""
-        var selection: TextSelection?
+        var selection: FormTextSelection?
         var name = ""
         var focused = false
     }

@@ -2,6 +2,12 @@ import AppKit
 // `@preconcurrency` downgrades AX diagnostics: the attribute keys are constant C globals.
 @preconcurrency import ApplicationServices
 
+/// The SDK ships no names for the marker attributes, though both have been the same since they existed.
+enum AccessibilityTextAttributes {
+    static let selectedTextMarkerRange = "AXSelectedTextMarkerRange"
+    static let stringForTextMarkerRange = "AXStringForTextMarkerRange"
+}
+
 /// Always against a named process: the system-wide focus answers with ours.
 enum AccessibilityText {
     /// Generous for a responsive app, short enough that a wedged one can't stall the main actor.
@@ -64,7 +70,7 @@ enum AccessibilityText {
         guard
             AXUIElementCopyAttributeValue(
                 element,
-                kAXSelectedTextMarkerRangeAttribute as CFString,
+                AccessibilityTextAttributes.selectedTextMarkerRange as CFString,
                 &range) == .success,
             let range,
             CFGetTypeID(range) == AXTextMarkerRangeGetTypeID()
@@ -74,7 +80,7 @@ enum AccessibilityText {
         guard
             AXUIElementCopyParameterizedAttributeValue(
                 element,
-                kAXStringForTextMarkerRangeParameterizedAttribute as CFString,
+                AccessibilityTextAttributes.stringForTextMarkerRange as CFString,
                 range,
                 &value) == .success
         else { return nil }

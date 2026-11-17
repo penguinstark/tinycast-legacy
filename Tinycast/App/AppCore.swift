@@ -462,7 +462,7 @@ final class AppCore {
     private func openPendingURLs() {
         let waiting = pendingURLs ?? []
         pendingURLs = nil
-        waiting.forEach(handleOpenURL)
+        for url in waiting { handleOpenURL(url) }
     }
 
     func handleReopen() {

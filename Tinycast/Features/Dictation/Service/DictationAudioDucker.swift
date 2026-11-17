@@ -24,15 +24,9 @@ final class DictationAudioDucker {
 
     init(
         fileURL: URL = AppPaths.applicationSupport().appending(path: "dictation-volume.json"),
-        defaultOutput: @escaping () throws -> Output? = {
-            try AudioHardwareSystem.shared.defaultOutputDevice.flatMap {
-                try DictationAudioDucker.output(for: $0)
-            }
-        },
-        resolveOutput: @escaping (String) throws -> Output? = { uid in
-            try AudioHardwareSystem.shared.device(forUID: uid).flatMap {
-                try DictationAudioDucker.output(for: $0)
-            }
+        defaultOutput: @escaping () throws -> Output? = { DictationAudioDucker.defaultOutput() },
+        resolveOutput: @escaping (String) throws -> Output? = {
+            DictationAudioDucker.output(forUID: $0)
         }
     ) {
         self.fileURL = fileURL
@@ -170,25 +164,90 @@ final class DictationAudioDucker {
         }.value
     }
 
-    private static func output(for device: AudioHardwareDevice) throws -> Output? {
-        guard let control = try device.controls.first(where: isMainOutputVolume) else { return nil }
-        return Output(
-            deviceUID: try device.uid,
-            read: { try control.volumeScalarValue }, write: { try control.setVolumeScalarValue($0) })
+    private static func defaultOutput() -> Output? {
+        var device = AudioDeviceID(kAudioObjectUnknown)
+        var size = UInt32(MemoryLayout<AudioDeviceID>.size)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
+        let status = AudioObjectGetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &size, &device)
+        guard status == noErr, device != AudioDeviceID(kAudioObjectUnknown) else { return nil }
+        return output(for: device)
     }
 
-    private static func isMainOutputVolume(_ control: AudioHardwareControl) -> Bool {
-        guard (try? control.classID) == kAudioVolumeControlClassID else { return false }
-        func value(for selector: AudioObjectPropertySelector) -> UInt32? {
-            let address = AudioObjectPropertyAddress(
-                mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal,
-                mElement: kAudioObjectPropertyElementMain)
-            guard let data = try? control.propertyData(address: address, qualifier: nil),
-                data.count == MemoryLayout<UInt32>.size
-            else { return nil }
-            return data.withUnsafeBytes { $0.loadUnaligned(as: UInt32.self) }
+    private static func output(forUID uid: String) -> Output? {
+        var device = AudioDeviceID(kAudioObjectUnknown)
+        var size = UInt32(MemoryLayout<AudioDeviceID>.size)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyTranslateUIDToDevice,
+            mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
+        let qualifier = uid as CFString
+        let status = withUnsafePointer(to: qualifier) {
+            AudioObjectGetPropertyData(
+                AudioObjectID(kAudioObjectSystemObject), &address,
+                UInt32(MemoryLayout<CFString>.size), $0, &size, &device)
         }
-        return value(for: kAudioControlPropertyScope) == kAudioObjectPropertyScopeOutput
-            && value(for: kAudioControlPropertyElement) == kAudioObjectPropertyElementMain
+        guard status == noErr, device != AudioDeviceID(kAudioObjectUnknown) else { return nil }
+        return output(for: device)
+    }
+
+    private static func output(for device: AudioDeviceID) -> Output? {
+        guard let uid = deviceUID(of: device), let address = volumeAddress(of: device) else {
+            return nil
+        }
+        return Output(
+            deviceUID: uid,
+            read: { try volume(address, of: device) },
+            write: { try setVolume($0, address: address, of: device) })
+    }
+
+    private static func deviceUID(of device: AudioDeviceID) -> String? {
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyDeviceUID, mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
+        var value: CFString?
+        var size = UInt32(MemoryLayout<CFString?>.size)
+        let status = withUnsafeMutablePointer(to: &value) {
+            AudioObjectGetPropertyData(device, &address, 0, nil, &size, $0)
+        }
+        guard status == noErr, let value else { return nil }
+        return value as String
+    }
+
+    /// Devices expose the main element or channels 1…; take the first scalar volume control found.
+    private static func volumeAddress(of device: AudioDeviceID) -> AudioObjectPropertyAddress? {
+        for element in [kAudioObjectPropertyElementMain, AudioObjectPropertyElement(1)] {
+            var address = AudioObjectPropertyAddress(
+                mSelector: kAudioDevicePropertyVolumeScalar,
+                mScope: kAudioObjectPropertyScopeOutput, mElement: element)
+            if AudioObjectHasProperty(device, &address) { return address }
+        }
+        return nil
+    }
+
+    private static func volume(
+        _ address: AudioObjectPropertyAddress, of device: AudioDeviceID
+    ) throws -> Float {
+        var address = address
+        var value = Float.zero
+        var size = UInt32(MemoryLayout<Float>.size)
+        let status = AudioObjectGetPropertyData(device, &address, 0, nil, &size, &value)
+        guard status == noErr else { throw halError(status) }
+        return value
+    }
+
+    private static func setVolume(
+        _ volume: Float, address: AudioObjectPropertyAddress, of device: AudioDeviceID
+    ) throws {
+        var address = address
+        var value = volume
+        let status = AudioObjectSetPropertyData(
+            device, &address, 0, nil, UInt32(MemoryLayout<Float>.size), &value)
+        guard status == noErr else { throw halError(status) }
+    }
+
+    private static func halError(_ status: OSStatus) -> NSError {
+        NSError(domain: NSOSStatusErrorDomain, code: Int(status))
     }
 }

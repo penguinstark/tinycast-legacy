@@ -202,7 +202,7 @@ final class SnippetsStore {
     private func publishLocal(records: [StoredSnippet]) {
         apply(
             SnippetRepository.Snapshot(
-                records: records.sorted(by: recordOrder),
+                records: records.sorted { recordOrder($0, $1) },
                 issues: issues))
     }
 

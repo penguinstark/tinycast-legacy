@@ -592,10 +592,11 @@ enum CalcTimeZone {
             let days = dates.dateComponents([.day], from: from, to: to).day
         else { return nil }
         guard days != 0 else { return "" }
-        var relative = Date.AnchoredRelativeFormatStyle(
-            anchor: to, presentation: .named, locale: calendar.locale ?? Locale(identifier: "en_US"),
-            calendar: dates)
-        relative.allowedFields = [.day]
-        return " (\(from.formatted(relative)))"
+        let relative = RelativeDateTimeFormatter()
+        relative.calendar = dates
+        relative.locale = calendar.locale ?? Locale(identifier: "en_US")
+        relative.dateTimeStyle = .named
+        relative.unitsStyle = .full
+        return " (\(relative.localizedString(for: from, relativeTo: to)))"
     }
 }

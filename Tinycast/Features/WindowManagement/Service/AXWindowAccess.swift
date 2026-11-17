@@ -26,7 +26,7 @@ enum AXWindowAccess {
         for attribute in [kAXFocusedWindowAttribute, kAXMainWindowAttribute] {
             if let window = element(application, attribute), isEligible(window) { return window }
         }
-        return windows(in: application).first(where: isEligible)
+        return windows(in: application).first { isEligible($0) }
     }
 
     /// Every window the app reports, unfiltered and in its own order.

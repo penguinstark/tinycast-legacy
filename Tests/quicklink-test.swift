@@ -195,7 +195,7 @@ struct QuicklinkTests {
         let editor = QuicklinkEditorSession(quicklink: nil)
         editor.link = "https://example.com/query"
         let start = editor.link.index(editor.link.endIndex, offsetBy: -5)
-        editor.selection = TextSelection(range: start..<editor.link.endIndex)
+        editor.selection = FormTextSelection(range: start..<editor.link.endIndex)
         editor.focusedField = .name
         editor.insert("{argument}")
         expect(
@@ -206,7 +206,7 @@ struct QuicklinkTests {
         expect(editor.link.hasSuffix("{argument}{clipboard}"), "Insert without a selection appends")
         editor.link = "avant 👋 après"
         let cursor = editor.link.index(editor.link.startIndex, offsetBy: 7)
-        editor.selection = TextSelection(range: cursor..<cursor)
+        editor.selection = FormTextSelection(range: cursor..<cursor)
         editor.insert("\n")
         expect(editor.link == "avant 👋\n après", "Return inserts a line break at the Unicode caret")
         editor.insert("{date}")

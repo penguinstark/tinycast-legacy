@@ -85,7 +85,7 @@ struct CompactShortcutsSection: View {
         _ commands: [CommandID], select: @escaping (CommandID) -> Void
     ) -> some View {
         let off = commands.filter { !appIndex.isCommandEnabled($0) }
-        ForEach(commands.filter(appIndex.isCommandEnabled), id: \.self) { command in
+        ForEach(commands.filter { appIndex.isCommandEnabled($0) }, id: \.self) { command in
             Button {
                 select(command)
             } label: {

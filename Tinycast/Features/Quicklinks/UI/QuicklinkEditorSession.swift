@@ -15,7 +15,7 @@ final class QuicklinkEditorSession {
     var openWithBundleID: String?
     var showsInRootSearch: Bool
     var isPinned: Bool
-    var selection: TextSelection?
+    var selection: FormTextSelection?
     var focusedField: Field = .link
     var errorMessage: String?
 
@@ -52,7 +52,7 @@ final class QuicklinkEditorSession {
 
     func insert(_ token: String) {
         let offset: Int
-        if let selection, case .selection(let range) = selection.indices,
+        if let range = selection?.range,
             range.lowerBound >= link.startIndex, range.upperBound <= link.endIndex
         {
             offset = link.distance(from: link.startIndex, to: range.lowerBound)
@@ -62,7 +62,7 @@ final class QuicklinkEditorSession {
             link += token
         }
         let caret = link.index(link.startIndex, offsetBy: offset + token.count)
-        selection = TextSelection(range: caret..<caret)
+        selection = FormTextSelection(range: caret..<caret)
         focusedField = .link
     }
 }

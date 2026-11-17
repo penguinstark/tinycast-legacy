@@ -27,7 +27,7 @@ final class FallbackCoordinator {
     /// The launcher's rows. An empty query is nobody's input, so it earns no section at all.
     func entries(for query: String) -> [(fallback: Fallback, entry: AppEntry)] {
         guard !query.trimmingCharacters(in: .whitespaces).isEmpty else { return [] }
-        return available.filter(store.isEnabled).compactMap { fallback in
+        return available.filter { store.isEnabled($0) }.compactMap { fallback in
             entry(for: fallback).map { (fallback, $0) }
         }
     }
@@ -58,7 +58,7 @@ final class FallbackCoordinator {
 
     /// A fallback whose feature is switched off is offered nowhere, Settings included.
     private var candidates: [Fallback] {
-        var result = Fallback.Builtin.allCases.filter(isAvailable).map(Fallback.builtin)
+        var result = Fallback.Builtin.allCases.filter { isAvailable($0) }.map(Fallback.builtin)
         guard settings.quicklinksEnabled else { return result }
         result += quicklinks.quicklinks
             .filter { $0.isEnabled && QuicklinkDestination.containsPlaceholder($0.link) }

@@ -226,7 +226,7 @@ final class NotesWindowController: NSObject, NSWindowDelegate {
         window.standardWindowButton(.miniaturizeButton)?.isEnabled = false
         window.standardWindowButton(.zoomButton)?.isEnabled = false
         let buttons = [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton]
-            .compactMap(window.standardWindowButton)
+            .compactMap { window.standardWindowButton($0) }
         guard let leading = buttons.first, let band = leading.superview?.bounds.height else {
             return
         }

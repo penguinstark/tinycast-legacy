@@ -76,13 +76,15 @@ final class DialogPanel: NSPanel, AnimatedPanel {
     func focusFirstTextField() {
         // SwiftUI builds its text fields on first layout, which may not have run by turning key.
         contentView?.layoutSubtreeIfNeeded()
-        guard let field = contentView.flatMap(Self.firstTextField(in:)) else { return }
+        guard let content = contentView, let field = Self.firstTextField(in: content) else {
+            return
+        }
         makeFirstResponder(field)
     }
 
     private static func firstTextField(in view: NSView) -> NSView? {
         if let field = view as? NSTextField, field.isEditable { return field }
         if let text = view as? NSTextView, text.isEditable { return text }
-        return view.subviews.lazy.compactMap(firstTextField(in:)).first
+        return view.subviews.lazy.compactMap { firstTextField(in: $0) }.first
     }
 }

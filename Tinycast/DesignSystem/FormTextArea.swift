@@ -3,7 +3,7 @@ import SwiftUI
 
 struct FormTextArea: NSViewRepresentable {
     @Binding var text: String
-    @Binding var selection: TextSelection?
+    @Binding var selection: FormTextSelection?
     @Binding var focused: Bool
     var minimumHeight: CGFloat
     let label: String
@@ -75,8 +75,8 @@ struct FormTextArea: NSViewRepresentable {
                 }
                 view.breakUndoCoalescing()
             }
-            if let selection, case .selection(let range) = selection.indices {
-                view.setSelectedRange(NSRange(range, in: text))
+            if let selection {
+                view.setSelectedRange(NSRange(selection.range, in: text))
             } else {
                 view.setSelectedRange(NSRange(location: (text as NSString).length, length: 0))
             }
@@ -153,7 +153,7 @@ struct FormTextArea: NSViewRepresentable {
     }
 
     @MainActor
-    final class Coordinator: NSObject, NSTextViewDelegate, @MainActor NSTextStorageDelegate {
+    final class Coordinator: NSObject, NSTextViewDelegate, NSTextStorageDelegate {
         var input: FormTextArea
         var isUpdating = false
         weak var view: InputView?
@@ -165,13 +165,15 @@ struct FormTextArea: NSViewRepresentable {
             updateSelection(view)
         }
 
-        func textStorage(
+        nonisolated func textStorage(
             _ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions,
             range editedRange: NSRange, changeInLength delta: Int
         ) {
-            guard !isUpdating, editedMask.contains(.editedCharacters) else { return }
-            input.text = textStorage.string
-            view?.invalidateIntrinsicContentSize()
+            MainActor.assumeIsolated {
+                guard !isUpdating, editedMask.contains(.editedCharacters) else { return }
+                input.text = textStorage.string
+                view?.invalidateIntrinsicContentSize()
+            }
         }
 
         func textViewDidChangeSelection(_ notification: Notification) {
@@ -182,7 +184,7 @@ struct FormTextArea: NSViewRepresentable {
 
         private func updateSelection(_ view: NSTextView) {
             guard let range = Range(view.selectedRange(), in: input.text) else { return }
-            input.selection = TextSelection(range: range)
+            input.selection = FormTextSelection(range: range)
         }
 
         func textView(_ textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {

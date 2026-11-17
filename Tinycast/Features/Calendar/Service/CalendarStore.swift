@@ -148,7 +148,7 @@ final class CalendarStore {
         // The predicate expands recurrence itself; rolling our own never works.
         let predicate = store.predicateForEvents(
             withStart: interval.start, end: interval.end, calendars: selected)
-        publish(store.events(matching: predicate).compactMap(Self.meeting(from:)))
+        publish(store.events(matching: predicate).compactMap { Self.meeting(from: $0) })
     }
 
     private func publish(_ next: [MeetingEvent]) {

@@ -13,7 +13,7 @@ final class SnippetEditorSession {
     var text: String
     var isEnabled: Bool
     var showsConfirmation: Bool
-    var selection: TextSelection?
+    var selection: FormTextSelection?
     var focusedField: Field = .template
     var errorMessage: String?
     var isSaving = false
@@ -48,7 +48,7 @@ final class SnippetEditorSession {
 
     func insert(_ token: String) {
         let offset: Int
-        if let selection, case .selection(let range) = selection.indices,
+        if let range = selection?.range,
             range.lowerBound >= text.startIndex, range.upperBound <= text.endIndex
         {
             offset = text.distance(from: text.startIndex, to: range.lowerBound)
@@ -58,7 +58,7 @@ final class SnippetEditorSession {
             text += token
         }
         let caret = text.index(text.startIndex, offsetBy: offset + token.count)
-        selection = TextSelection(range: caret..<caret)
+        selection = FormTextSelection(range: caret..<caret)
         focusedField = .template
     }
 }

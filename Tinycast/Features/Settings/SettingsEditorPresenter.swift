@@ -302,7 +302,7 @@ final class SettingsEditorPresenter: NSObject {
 
     /// Outermost first, so a nested panel centres on a parent that has already settled.
     @objc private func hostDidChangeFrame(_ notification: Notification) {
-        presentations.forEach(layout)
+        for presentation in presentations { layout(presentation) }
     }
 
     private func layout(_ presentation: Presentation) {

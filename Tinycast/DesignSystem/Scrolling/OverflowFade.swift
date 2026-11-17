@@ -42,23 +42,27 @@ struct OverflowFadeMask: ViewModifier {
         }
         let extent = min(band / height, 0.5)
         return [
-            .init(color: .black.opacity(1 - topStrength), location: 0),
+            .init(color: .black.opacity(fade(topStrength)), location: 0),
             .init(
-                color: .black.opacity(1 - topStrength * 0.75),
-                location: extent * 0.35),
+                color: .black.opacity(fade(topStrength, scaling: 0.75)),
+                location: extent * CGFloat(0.35)),
             .init(
-                color: .black.opacity(1 - topStrength * 0.25),
-                location: extent * 0.7),
+                color: .black.opacity(fade(topStrength, scaling: 0.25)),
+                location: extent * CGFloat(0.7)),
             .init(color: .black, location: extent),
             .init(color: .black, location: 1 - extent),
             .init(
-                color: .black.opacity(1 - bottomStrength * 0.25),
-                location: 1 - extent * 0.7),
+                color: .black.opacity(fade(bottomStrength, scaling: 0.25)),
+                location: 1 - extent * CGFloat(0.7)),
             .init(
-                color: .black.opacity(1 - bottomStrength * 0.75),
-                location: 1 - extent * 0.35),
-            .init(color: .black.opacity(1 - bottomStrength), location: 1)
+                color: .black.opacity(fade(bottomStrength, scaling: 0.75)),
+                location: 1 - extent * CGFloat(0.35)),
+            .init(color: .black.opacity(fade(bottomStrength)), location: 1)
         ]
+    }
+
+    private func fade(_ strength: CGFloat, scaling: Double = 1) -> Double {
+        1 - Double(strength) * scaling
     }
 
     /// The original Settings and Notes curve stays unchanged when no popup opts into its top edge.
@@ -68,7 +72,7 @@ struct OverflowFadeMask: ViewModifier {
         return [
             .init(color: .black, location: 0),
             .init(color: .black, location: 1 - band / height),
-            .init(color: .black.opacity(1 - strength), location: 1)
+            .init(color: .black.opacity(fade(strength)), location: 1)
         ]
     }
 }

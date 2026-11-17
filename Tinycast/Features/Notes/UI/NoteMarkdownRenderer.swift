@@ -2,7 +2,7 @@ import AppKit
 
 /// Keeps a note's parse and reveal state in step with its text view, restyling only what changed.
 @MainActor
-final class NoteMarkdownRenderer: NSObject, @MainActor NSTextStorageDelegate {
+final class NoteMarkdownRenderer: NSObject, NSTextStorageDelegate {
     private(set) var markdown = NoteMarkdown.empty
     private(set) var revealed = IndexSet()
     /// The Render Markdown setting; flipping it takes effect on the next `reset()`.
@@ -113,20 +113,23 @@ final class NoteMarkdownRenderer: NSObject, @MainActor NSTextStorageDelegate {
     }
 
     /// Storage reports every mutation here, undo and marked text included; styling never does.
-    func textStorage(
+    nonisolated func textStorage(
         _ textStorage: NSTextStorage, didProcessEditing edited: NSTextStorageEditActions,
         range: NSRange, changeInLength delta: Int
     ) {
-        guard edited.contains(.editedCharacters) else { return }
-        let before = NSRange(location: range.location, length: range.length - delta)
-        guard let pending = pendingEdit else {
-            pendingEdit = (old: before, new: range)
-            return
+        MainActor.assumeIsolated {
+            guard edited.contains(.editedCharacters) else { return }
+            let before = NSRange(location: range.location, length: range.length - delta)
+            guard let pending = pendingEdit else {
+                pendingEdit = (old: before, new: range)
+                return
+            }
+            let lower = min(pending.old.location, before.location)
+            let upper = max(NSMaxRange(pending.new), NSMaxRange(before))
+            let shift = pending.new.length - pending.old.length
+            pendingEdit = (
+                old: NSRange(lower..<(upper - shift)), new: NSRange(lower..<(upper + delta)))
         }
-        let lower = min(pending.old.location, before.location)
-        let upper = max(NSMaxRange(pending.new), NSMaxRange(before))
-        let shift = pending.new.length - pending.old.length
-        pendingEdit = (old: NSRange(lower..<(upper - shift)), new: NSRange(lower..<(upper + delta)))
     }
 
     private static func units(of storage: NSTextStorage) -> [UInt16] {

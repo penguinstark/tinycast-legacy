@@ -23,7 +23,7 @@ final class InputSourceSwitcher {
 
     /// A `selected` source that is gone stays listed, so Settings keeps showing it.
     func options(selecting selected: String?) -> [Option] {
-        var options = Self.enabledKeyboardSources().compactMap(Self.option(for:))
+        var options = Self.enabledKeyboardSources().compactMap { Self.option(for: $0) }
         if let selected, !options.contains(where: { $0.id == selected }) {
             options.append(Option(id: selected, title: selected))
         }

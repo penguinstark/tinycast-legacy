@@ -5,12 +5,13 @@ import Foundation
 @Observable
 final class RegionNumberFormatMonitor {
     private(set) var system = RegionNumberFormatMonitor.read()
-    @ObservationIgnored private var token: NotificationCenter.ObservationToken?
+    @ObservationIgnored private var token: (any NSObjectProtocol)?
 
     init() {
-        token = NotificationCenter.default.addObserver(of: Locale.self, for: .currentLocaleDidChange) {
-            [weak self] _ in
-            self?.system = Self.read()
+        token = NotificationCenter.default.addObserver(
+            forName: NSLocale.currentLocaleDidChangeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.system = Self.read() }
         }
     }
 

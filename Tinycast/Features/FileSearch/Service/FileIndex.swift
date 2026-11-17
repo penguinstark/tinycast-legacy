@@ -72,7 +72,7 @@ final class FileIndex: Sendable {
     }
 
     private let state = OSAllocatedUnfairLock(initialState: State())
-    private let lister = OSAllocatedUnfairLock(initialState: FileIndexCrawler.Lister())
+    private let lister = OSAllocatedUnfairLock(uncheckedState: FileIndexCrawler.Lister())
 
     var snapshot: FileIndexSnapshot? { state.withLock { $0.snapshot } }
 
@@ -248,7 +248,7 @@ final class FileIndex: Sendable {
         else { return nil }
 
         var diff = FolderDiff(folder: path, state: current, snapshot: snapshot, policy: policy)
-        let listed = lister.withLock { lister in
+        let listed = lister.withLockUnchecked { lister in
             recursive
                 ? diff.rescan(base: base, prior: prior, using: lister)
                 : diff.compare(base: base, prior: prior, using: lister)
