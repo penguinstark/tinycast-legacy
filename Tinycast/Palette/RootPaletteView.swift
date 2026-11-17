@@ -408,19 +408,27 @@ struct RootPaletteView: View {
     /// Split from `body` for the same reason `keyHandlers` is: one chain cannot carry them all.
     @ViewBuilder
     private func stateObservers(_ content: some View) -> some View {
-        emojiObservers(content)
-            // Every show bumps focusToken so the search field refocuses.
-            .onChange(of: vm.focusToken) {
-                resetCompactSelection()
-                searchFocused = !screen.hidesSearchField
-            }
-            .onChange(of: vm.isVisible) { resetCompactSelection() }
-            .onChange(of: vm.isComposing) {
-                if vm.isComposing { resetCompactSelection() }
-            }
-            .onChange(of: compactCommands) {
-                compactSelection.reconcile(commands: compactCommands)
-            }
+        paneObservers(
+            emojiObservers(content)
+                // Every show bumps focusToken so the search field refocuses.
+                .onChange(of: vm.focusToken) {
+                    resetCompactSelection()
+                    searchFocused = !screen.hidesSearchField
+                }
+                .onChange(of: vm.isVisible) { resetCompactSelection() }
+                .onChange(of: vm.isComposing) {
+                    if vm.isComposing { resetCompactSelection() }
+                }
+                .onChange(of: compactCommands) {
+                    compactSelection.reconcile(commands: compactCommands)
+                }
+        )
+    }
+
+    /// The rest of the chain, split again for the type-checker's sake.
+    @ViewBuilder
+    private func paneObservers(_ content: some View) -> some View {
+        content
             // A preserved screen re-summons as it was left, so a menu must end with the palette.
             .modifier(PaletteHideObserver { if menuOpen { closeMenus() } })
             .onChange(of: vm.query) {
@@ -745,7 +753,7 @@ struct RootPaletteView: View {
     }
 
     private var compactCommands: [CommandID] {
-        settings.compactBarCommands.filter(appIndex.isCommandEnabled)
+        settings.compactBarCommands.filter { appIndex.isCommandEnabled($0) }
     }
 
     private func resetCompactSelection() {

@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 /// Identifies the editor to present; nil is "new", and the UUID keeps two opens distinct.
@@ -44,13 +45,12 @@ struct WindowLayoutEditorPanel: View {
         }
         .frame(width: Theme.Size.layoutEditorSheet.width)
         .settingsEditorPanelSurface()
-        .task {
+        .onReceive(
+            NotificationCenter.default.publisher(
+                for: NSApplication.didChangeScreenParametersNotification)
+        ) { _ in
             // A display can be unplugged mid-edit; the canvas must not draw geometry that is gone.
-            for await _ in NotificationCenter.default.notifications(
-                named: NSApplication.didChangeScreenParametersNotification)
-            {
-                screens = Self.connectedScreens()
-            }
+            screens = Self.connectedScreens()
         }
     }
 

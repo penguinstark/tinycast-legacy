@@ -86,7 +86,7 @@ struct SnippetsTests {
         editing.name = "Changed"
         check("draft changes do not modify the loaded record", editing.record?.snippet.name == "Original")
         let end = editing.text.index(editing.text.startIndex, offsetBy: 2)
-        editing.selection = TextSelection(range: editing.text.startIndex..<end)
+        editing.selection = FormTextSelection(range: editing.text.startIndex..<end)
         editing.focusedField = .keyword
         editing.insert("{date}")
         check("placeholder replaces the selected text", editing.text == "{date}llo")
@@ -98,7 +98,7 @@ struct SnippetsTests {
         check("placeholder without a selection appends", editing.text == "{date}{time}llo{cursor}")
         editing.text = "Avant 👋 après"
         let cursor = editing.text.index(editing.text.startIndex, offsetBy: 7)
-        editing.selection = TextSelection(range: cursor..<cursor)
+        editing.selection = FormTextSelection(range: cursor..<cursor)
         editing.insert("\n")
         check("Return inserts a line break at the Unicode caret", editing.text == "Avant 👋\n après")
         editing.advanceFocus(backwards: false)

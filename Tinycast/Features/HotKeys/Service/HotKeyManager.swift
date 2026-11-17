@@ -304,7 +304,7 @@ final class HotKeyManager {
         secureInputPressedActions.removeAll(keepingCapacity: true)
         secureInputEquivalentIDs.forEach { center.unregister(id: $0) }
         secureInputEquivalentIDs.removeAll(keepingCapacity: true)
-        secureInputReplacedActions.forEach(register)
+        for action in secureInputReplacedActions { register(action) }
         secureInputReplacedActions.removeAll(keepingCapacity: true)
     }
 

@@ -146,11 +146,15 @@ final class CalendarCoordinator {
             refreshMenuBarEvent()
             return
         }
-        store.onChange = { [weak self] in
-            self?.publishEntries()
-            self?.refreshMenuBarEvent()
+        store.onChange = { @Sendable [weak self] in
+            MainActor.assumeIsolated {
+                self?.publishEntries()
+                self?.refreshMenuBarEvent()
+            }
         }
-        clock.onTick = { [weak self] in self?.minuteDidPass() }
+        clock.onTick = { @Sendable [weak self] in
+            MainActor.assumeIsolated { self?.minuteDidPass() }
+        }
         applySpan()
         store.start()
         publishEntries()
@@ -231,7 +235,7 @@ final class CalendarCoordinator {
         }
         let meetings =
             settings.calendarLauncherLimit.maximum.map { Array(agenda.prefix($0)) } ?? agenda
-        appIndex.setMeetings(meetings.map(Self.entry(for:)))
+        appIndex.setMeetings(meetings.map { Self.entry(for: $0) })
     }
 
     private static func entry(for meeting: MeetingEvent) -> AppEntry {

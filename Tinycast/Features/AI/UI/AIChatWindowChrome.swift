@@ -63,7 +63,6 @@ final class AIChatWindowChrome: NSObject, WindowChrome, NSToolbarDelegate, NSSea
         toolbar.delegate = self
         toolbar.displayMode = .iconOnly
         toolbar.allowsUserCustomization = false
-        toolbar.allowsDisplayModeCustomization = false
         window.toolbar = toolbar
 
         installKeyMonitor()

@@ -743,7 +743,7 @@ final class AppIndex {
         return resultsMemo.value(for: key) {
             // Filtering stays downstream of `matches` so that memo is never keyed on hidden state.
             let matched = searchResults(q)
-            let visible = matched.entries.filter(visibility.isVisible)
+            let visible = matched.entries.filter { visibility.isVisible($0) }
             guard q.isEmpty else {
                 let matchCount = matched.entries.prefix(matched.matchCount).count(where: visibility.isVisible)
                 return Results(entries: visible, matchCount: matchCount)

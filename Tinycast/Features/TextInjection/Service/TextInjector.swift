@@ -760,7 +760,7 @@ final class TextInjector {
         guard
             AXUIElementCopyAttributeValue(
                 element,
-                kAXSelectedTextMarkerRangeAttribute as CFString,
+                AccessibilityTextAttributes.selectedTextMarkerRange as CFString,
                 &value) == .success,
             let value
         else { return false }

@@ -209,12 +209,15 @@ enum CalcEngine {
                 payload: payload)
         }
 
-        return CalcPercent.evaluate(tokens, query: query) ?? CalcRounding.evaluate(tokens, query: query)
-            ?? CalcFinance.evaluate(tokens, query: query) ?? CalcGrowth.evaluate(tokens, query: query)
-            ?? CalcSpokenMath.evaluate(tokens, query: query)
-            ?? CalcStatistics.evaluate(tokens, query: query) ?? CalcRatePhrases.evaluate(tokens, query: query)
-            ?? CalcSubstance.evaluate(tokens, query: query) ?? CalcPixelDensity.evaluate(tokens, query: query)
-            ?? CalcPitch.evaluate(tokens, query: query)
+        let evaluators: [([CalcToken], String) -> CalcResult?] = [
+            CalcPercent.evaluate, CalcRounding.evaluate, CalcFinance.evaluate, CalcGrowth.evaluate,
+            CalcSpokenMath.evaluate, CalcStatistics.evaluate, CalcRatePhrases.evaluate,
+            CalcSubstance.evaluate, CalcPixelDensity.evaluate, CalcPitch.evaluate,
+        ]
+        for evaluate in evaluators {
+            if let result = evaluate(tokens, query) { return result }
+        }
+        return nil
     }
 
     private static func withoutQuestionMark(_ text: String) -> String {

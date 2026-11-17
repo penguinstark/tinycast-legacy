@@ -94,7 +94,7 @@ enum RoomRunner {
         let hidden = WindowInventory.candidates().filter {
             $0.isHidden && hiddenApps.contains($0.processIdentifier)
         }
-        hidden.forEach(show)
+        for app in hidden { show(app) }
         await wait(for: unhideDeadline, every: unhidePoll) { hidden.allSatisfy { !$0.isHidden } }
         returnParkedWindows(ledger: ledger)
     }
@@ -149,7 +149,7 @@ enum RoomRunner {
         let hidden = WindowInventory.candidates().filter {
             $0.isHidden && wanted.contains($0.bundleIdentifier ?? "")
         }
-        hidden.forEach(show)
+        for app in hidden { show(app) }
         return hidden
     }
 

@@ -165,7 +165,7 @@ enum SettingsFileSchema {
     }
 
     /// A folder is absolute or under `~/`; null puts it back in Application Support.
-    private static func folder(_ path: String?) -> String?? {
+    nonisolated private static func folder(_ path: String?) -> String?? {
         guard let path else { return .some(nil) }
         return AppPaths.isFolderPath(path) ? path : nil
     }

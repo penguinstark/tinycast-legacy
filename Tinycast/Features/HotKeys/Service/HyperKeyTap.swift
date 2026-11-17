@@ -1,5 +1,6 @@
 import AppKit
 import Carbon.HIToolbox
+@preconcurrency import Darwin
 @preconcurrency import IOKit.hidsystem
 import os
 

@@ -193,7 +193,7 @@ enum BackupActions {
     /// Quit any running Raycast so its hotkeys stop clashing; background helpers stay.
     static func quitRaycast() {
         for app in NSWorkspace.shared.runningApplications
-        where app.bundleIdentifier.map(isRaycastBundleID) == true
+        where app.bundleIdentifier?.hasPrefix(raycastBundleIDPrefix) == true
             && app.activationPolicy != .prohibited
         {
             app.terminate()

@@ -1,6 +1,6 @@
 import CommonCrypto
 import CryptoKit
-import Darwin
+@preconcurrency import Darwin
 import Foundation
 
 /// Answered inline on the JS queue, so a blocking answer can never deadlock the UI.

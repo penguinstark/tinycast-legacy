@@ -8,7 +8,7 @@ final class OpenCodeMCPBridge {
     private let failure: (String) -> Void
     private let bearer = UUID().uuidString + UUID().uuidString
     private let server = "tinycast_" + UUID().uuidString.replacingOccurrences(of: "-", with: "")
-    private var task: Task<Void, Never>?
+    private var listener: NWListener?
     private var ready: CheckedContinuation<UInt16, Error>?
     private var stopped = false
     private var calls = 0
@@ -25,37 +25,35 @@ final class OpenCodeMCPBridge {
         self.failure = failure
     }
 
-    isolated deinit { task?.cancel() }
+    isolated deinit { listener?.cancel() }
 
     func start() async throws -> String {
-        let listener = try NetworkListener(
-            using: .parameters { TCP() }
-                .localEndpoint(.hostPort(host: .ipv4(.loopback), port: .any)))
-        listener.newConnectionLimit = 16
+        let parameters = NWParameters.tcp
+        parameters.requiredLocalEndpoint = .hostPort(host: .ipv4(.loopback), port: .any)
+        let listener = try NWListener(using: parameters)
+        self.listener = listener
         let port = try await withTaskCancellationHandler {
             try Task.checkCancellation()
             return try await withCheckedThrowingContinuation { continuation in
                 ready = continuation
-                task = Task { [weak self] in
-                    do {
-                        try await listener.onStateUpdate { [weak self] listener, state in
-                            switch state {
-                            case .ready:
-                                guard let port = listener.port?.rawValue else { return }
-                                self?.ready?.resume(returning: port)
-                                self?.ready = nil
-                            case .waiting, .failed:
-                                self?.fail(URLError(.cannotConnectToHost))
-                            default: break
-                            }
-                        }.run { [weak self] connection in
-                            defer { listener.newConnectionLimit += 1 }
-                            await self?.receive(connection)
+                listener.stateUpdateHandler = { [weak self] state in
+                    Task { @MainActor [weak self] in
+                        switch state {
+                        case .ready:
+                            guard let port = listener.port?.rawValue else { return }
+                            self?.ready?.resume(returning: port)
+                            self?.ready = nil
+                        case .waiting, .failed:
+                            self?.fail(URLError(.cannotConnectToHost))
+                        default: break
                         }
-                    } catch {
-                        self?.fail(error)
                     }
                 }
+                listener.newConnectionHandler = { [weak self] connection in
+                    connection.start(queue: .main)
+                    Task { @MainActor [weak self] in await self?.receive(connection) }
+                }
+                listener.start(queue: .main)
             }
         } onCancel: {
             Task { @MainActor [weak self] in self?.stop() }
@@ -73,8 +71,8 @@ final class OpenCodeMCPBridge {
         ready = nil
         for waiter in waiting { waiter.resume(throwing: CancellationError()) }
         waiting = []
-        task?.cancel()
-        task = nil
+        listener?.cancel()
+        listener = nil
     }
 
     private func fail(_ error: any Error) {
@@ -85,7 +83,8 @@ final class OpenCodeMCPBridge {
         failure(error.localizedDescription)
     }
 
-    private func receive(_ connection: NetworkConnection<TCP>) async {
+    private func receive(_ connection: NWConnection) async {
+        defer { connection.cancel() }
         do {
             let body = try await withThrowingTaskGroup(of: Data.self) { group in
                 group.addTask { [weak self] in
@@ -115,12 +114,12 @@ final class OpenCodeMCPBridge {
         let status: String
     }
 
-    private func read(_ connection: NetworkConnection<TCP>) async throws -> Data {
+    private func read(_ connection: NWConnection) async throws -> Data {
         var bytes = Data()
         var bodyStart: Int?
         var length = 0
         while true {
-            let message = try await connection.receive(atLeast: 1, atMost: 8192)
+            let message = try await receiveChunk(connection)
             bytes.append(message.content)
             if bodyStart == nil {
                 if let separator = bytes.range(of: Data("\r\n\r\n".utf8)) {
@@ -159,7 +158,7 @@ final class OpenCodeMCPBridge {
             if let bodyStart, bytes.count >= bodyStart + length {
                 return Data(bytes[bodyStart..<(bodyStart + length)])
             }
-            if message.metadata.endOfStream { throw HTTPFailure(status: "400 Bad Request") }
+            if message.isComplete { throw HTTPFailure(status: "400 Bad Request") }
         }
     }
 
@@ -260,15 +259,36 @@ final class OpenCodeMCPBridge {
         ])
     }
 
-    private func send(
-        _ connection: NetworkConnection<TCP>, status: String, body: Data?
-    ) async throws {
+    private func receiveChunk(_ connection: NWConnection) async throws -> (
+        content: Data, isComplete: Bool
+    ) {
+        try await withCheckedThrowingContinuation { continuation in
+            connection.receive(minimumIncompleteLength: 1, maximumLength: 8192) {
+                data, _, isComplete, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: (data ?? Data(), isComplete))
+                }
+            }
+        }
+    }
+
+    private func send(_ connection: NWConnection, status: String, body: Data?) async throws {
         let body = body ?? Data()
         var response = Data(
             ("HTTP/1.1 \(status)\r\nContent-Type: application/json\r\n"
                 + "Cache-Control: no-store\r\nConnection: close\r\n"
                 + "Content-Length: \(body.count)\r\n\r\n").utf8)
         response.append(body)
-        try await connection.send(response, endOfStream: true)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
+            connection.send(
+                content: response, contentContext: .finalMessage, isComplete: true,
+                completion: .contentProcessed { error in
+                    if let error { continuation.resume(throwing: error) }
+                    else { continuation.resume() }
+                })
+        }
+        connection.cancel()
     }
 }

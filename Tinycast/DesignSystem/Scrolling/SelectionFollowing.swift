@@ -66,8 +66,10 @@ private struct SelectionFollowing: ViewModifier {
                 align()
             }
             .onPreferenceChange(SelectionFrameKey.self) { frame in
-                selection = frame
-                align()
+                MainActor.assumeIsolated {
+                    selection = frame
+                    align()
+                }
             }
             .onChange(of: scroll) { _, scroll in begin(scroll.kind) }
     }

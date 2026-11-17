@@ -18,7 +18,7 @@ Check existing [issues](https://github.com/penguinstark/tinycast-sonoma/issues) 
 
 ## Setup
 
-- macOS 14.4+, Xcode 16.3 or later. Do the one-time signing setup
+- macOS 14.4+, Xcode 26 or later. Do the one-time signing setup
   ([`docs/signing.md`](docs/signing.md) §1).
 - `open Tinycast.xcodeproj` → ⌘R. Debug builds are their own channel (`Tinycast Sonoma Dev.app`).
 - After editing `project.yml`: `xcodegen generate`, commit the result. No SwiftPM.

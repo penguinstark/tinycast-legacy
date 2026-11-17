@@ -27,7 +27,7 @@ final class CustomCommandEditorSession {
     var requiresConfirmation: Bool
     var showsConfirmation: Bool
     var showsOutput: Bool
-    var selection: TextSelection?
+    var selection: FormTextSelection?
     var focusedField: Field = .name
     var errorMessage: String?
 
