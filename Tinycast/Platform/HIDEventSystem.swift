@@ -27,10 +27,10 @@ final class HIDEventSystem {
     }
 
     // Isolated so teardown can unschedule the main-queue delivery it registered.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         guard isWatchingConnections else { return }
         functions.unscheduleFromDispatchQueue(opaque(client), opaque(DispatchQueue.main))
-    }
+    }}
 
     var keyboards: [Keyboard] {
         guard let services = functions.copyServices(opaque(client))?.takeRetainedValue() else {

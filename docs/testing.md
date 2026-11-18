@@ -25,6 +25,11 @@ end of this file is the sixth, judged by what you touched.
 ./Scripts/run-tests.sh calc-test    # just one, while iterating
 ```
 
+The runner invokes plain `swiftc`, so point it at the Xcode you mean when `xcode-select` says
+otherwise: export `SDKROOT` and put that toolchain's `usr/bin` first on `PATH`. Do not export
+`DEVELOPER_DIR` for a run — `/usr/bin/python3` is an `xcrun` shim, and a set-but-unloadable Xcode
+makes the Python stand-ins some harnesses drive fail to launch.
+
 
 Two runtime areas also have standalone checks:
 

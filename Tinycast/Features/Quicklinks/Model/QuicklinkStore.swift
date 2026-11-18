@@ -53,9 +53,9 @@ final class QuicklinkStore {
     }
 
     // Isolated so teardown may touch the main-actor pointers; the release is already on main.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         closeDatabase()
-    }
+    }}
 
     func load() {
         guard let stmt = loadStmt else { return }

@@ -244,7 +244,7 @@ private enum ThumbnailSource {
         }
     }
 
-    func loadAsync(_ url: URL, maxPixel: CGFloat) async -> NSImage? {
+    func loadAsync(_ url: URL, maxPixel: CGFloat) async -> sending NSImage? {
         switch self {
         case .image(let derived):
             return await ImageThumbnail.loadAsync(

@@ -41,7 +41,7 @@ func AudioObjectGetPropertyData(
     _ qualifierSize: UInt32, _ qualifier: UnsafeRawPointer?,
     _ size: UnsafeMutablePointer<UInt32>, _ data: UnsafeMutableRawPointer
 ) -> OSStatus {
-    audio.withLock { fixture in
+    audio.withLockUnchecked { fixture in
         if address.pointee.mSelector == kAudioHardwarePropertyDefaultInputDevice {
             fixture.defaultLookups += 1
             if device != kAudioObjectSystemObject
@@ -69,7 +69,7 @@ func AudioObjectGetPropertyData(
 func AudioObjectHasProperty(
     _ device: AudioObjectID, _ address: UnsafePointer<AudioObjectPropertyAddress>
 ) -> Bool {
-    audio.withLock { fixture in
+    audio.withLockUnchecked { fixture in
         fixture.check(device, address.pointee)
         return fixture.hasMute
     }
@@ -79,7 +79,7 @@ func AudioObjectIsPropertySettable(
     _ device: AudioObjectID, _ address: UnsafePointer<AudioObjectPropertyAddress>,
     _ settable: UnsafeMutablePointer<DarwinBoolean>
 ) -> OSStatus {
-    audio.withLock { fixture in
+    audio.withLockUnchecked { fixture in
         fixture.check(device, address.pointee)
         settable.pointee = DarwinBoolean(fixture.settable)
         return noErr
@@ -91,7 +91,7 @@ func AudioObjectSetPropertyData(
     _ qualifierSize: UInt32, _ qualifier: UnsafeRawPointer?,
     _ size: UInt32, _ data: UnsafeRawPointer
 ) -> OSStatus {
-    audio.withLock { fixture in
+    audio.withLockUnchecked { fixture in
         fixture.check(device, address.pointee)
         let value = data.load(as: UInt32.self)
         fixture.writes.append(value)
@@ -117,14 +117,14 @@ struct MicrophoneMuteTests {
     }
 
     private static func reset(_ fixture: AudioFixture = AudioFixture()) {
-        audio.withLock { $0 = fixture }
+        audio.withLockUnchecked { $0 = fixture }
     }
 
     static func expectToggle(_ muted: Bool) async {
         do {
             let result = try await SystemActionRunner.toggleMicrophoneMute()
             expect(result == muted, "feedback matches the confirmed microphone state")
-            audio.withLock { fixture in
+            audio.withLockUnchecked { fixture in
                 expect(fixture.muted == (muted ? 1 : 0), "the native mute state changed")
                 expect(fixture.writes == [muted ? 1 : 0], "mute is written exactly once")
                 expect(!fixture.invalidAddress, "only input mute and the default input are accessed")
@@ -140,7 +140,7 @@ struct MicrophoneMuteTests {
             expect(false, "an unconfirmed change must not report success")
         } catch let failure as SystemActionFailure {
             expect(failure.message.contains(message), "the failure explains \(message)")
-            audio.withLock { fixture in
+            audio.withLockUnchecked { fixture in
                 expect(fixture.writes.count == writes, "failure performs only expected writes")
                 expect(!fixture.invalidAddress, "failure does not access output audio or gain")
             }
@@ -161,14 +161,14 @@ struct MicrophoneMuteTests {
 
         reset(AudioFixture(nextDefaultDevice: 99))
         await expectToggle(true)
-        audio.withLock { fixture in
+        audio.withLockUnchecked { fixture in
             expect(fixture.defaultLookups == 1, "one activation resolves the default input once")
             expect(fixture.controlDevices.allSatisfy { $0 == 78 }, "readback stays on the written device")
         }
         reset(AudioFixture(device: 99, muted: 1))
         await expectToggle(false)
         expect(
-            audio.withLock { $0.controlDevices.allSatisfy { $0 == 99 } },
+            audio.withLockUnchecked { $0.controlDevices.allSatisfy { $0 == 99 } },
             "the next toggle follows the new input")
 
         reset(AudioFixture(device: kAudioObjectUnknown))

@@ -15,6 +15,7 @@ final class OpenCodeMCPBridge {
     private var spent = 0
     private var invoking = false
     private var waiting: [CheckedContinuation<Void, Error>] = []
+    private var connectionTasks: [Task<Void, Never>] = []
 
     init(
         session: AIToolSession, event: @escaping (AIStreamEvent) -> Void,
@@ -25,7 +26,9 @@ final class OpenCodeMCPBridge {
         self.failure = failure
     }
 
-    isolated deinit { listener?.cancel() }
+    deinit {
+        MainActor.assumeIsolated { listener?.cancel() }
+    }
 
     func start() async throws -> String {
         let parameters = NWParameters.tcp
@@ -51,7 +54,16 @@ final class OpenCodeMCPBridge {
                 }
                 listener.newConnectionHandler = { [weak self] connection in
                     connection.start(queue: .main)
-                    Task { @MainActor [weak self] in await self?.receive(connection) }
+                    Task { @MainActor [weak self] in
+                        guard let self else {
+                            connection.cancel()
+                            return
+                        }
+                        let task: Task<Void, Never> = Task { @MainActor [weak self] in
+                            await self?.receive(connection)
+                        }
+                        self.connectionTasks.append(task)
+                    }
                 }
                 listener.start(queue: .main)
             }
@@ -71,6 +83,8 @@ final class OpenCodeMCPBridge {
         ready = nil
         for waiter in waiting { waiter.resume(throwing: CancellationError()) }
         waiting = []
+        for task in connectionTasks { task.cancel() }
+        connectionTasks = []
         listener?.cancel()
         listener = nil
     }

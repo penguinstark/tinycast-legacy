@@ -22,7 +22,7 @@ enum ImageThumbnail {
     /// Returns the decode directly, so an eviction mid-decode can't strand a placeholder.
     static func loadAsync(
         _ url: URL, maxPixel: CGFloat, copyingWith helper: URL? = nil
-    ) async -> NSImage? {
+    ) async -> sending NSImage? {
         if let cached = cached(url, maxPixel: maxPixel) { return cached }
         var decodable = url
         if let helper, let copy = ImageDerivative.covering(url, maxPixel: Int(maxPixel.rounded(.up))),

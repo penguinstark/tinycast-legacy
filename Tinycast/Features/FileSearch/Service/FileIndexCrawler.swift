@@ -2,7 +2,7 @@ import Darwin
 import Foundation
 
 /// One `getattrlistbulk` call lists hundreds of entries with their mtime, so nothing is stat'd.
-nonisolated enum FileIndexCrawler {
+enum FileIndexCrawler {
     static let none = UInt32.max
 
     struct Entry: Sendable {

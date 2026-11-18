@@ -340,7 +340,7 @@ enum ExtensionImage {
 
 extension ExtensionImage {
     /// An animating tile takes the image as shipped; the fitted path would hand back one frame.
-    static func load(_ resolved: Resolved?, isDark: Bool, animates: Bool) async -> NSImage? {
+    static func load(_ resolved: Resolved?, isDark: Bool, animates: Bool) async -> sending NSImage? {
         switch resolved?.source {
         case .file(let path):
             return animates

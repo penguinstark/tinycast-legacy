@@ -41,9 +41,9 @@ final class AIChatWindowChrome: NSObject, WindowChrome, NSToolbarDelegate, NSSea
         actionsButton.action = #selector(showActions)
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         if let keyMonitor { NSEvent.removeMonitor(keyMonitor) }
-    }
+    }}
 
     // MARK: - WindowChrome
 

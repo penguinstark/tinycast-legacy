@@ -54,7 +54,6 @@ struct ChatTranscriptView: View {
                             // Only the latest reply's choices still answer anything.
                             onChoose: isLast && message.state == .complete ? onChoose : nil
                         )
-                        .equatable()
                         .environment(\.chatTextHighlight, highlight(for: message.id))
                         .id(message.id)
                     }
@@ -177,7 +176,7 @@ private struct ResumeFollowingButton: View {
 }
 
 /// Equatable, so a flush redraws only the changed reply; closures compare by presence alone.
-private struct ChatMessageView: View, @MainActor Equatable {
+private struct ChatMessageView: View {
 
     @Environment(\.metrics) private var metrics
     let message: ChatMessage
@@ -331,14 +330,6 @@ private struct ChatMessageView: View, @MainActor Equatable {
             Text(highlight?.attributed(message.text, leaf: [0]) ?? AttributedString(message.text))
                 .findAnchor(highlight, leaf: [0])
         }
-    }
-}
-
-extension ChatMessageView {
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.message == rhs.message && lhs.surface == rhs.surface && lhs.status == rhs.status
-            && (lhs.onRegenerate == nil) == (rhs.onRegenerate == nil)
-            && (lhs.onChoose == nil) == (rhs.onChoose == nil)
     }
 }
 

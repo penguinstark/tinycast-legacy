@@ -34,7 +34,7 @@ extension CGEvent {
         eventsOfInterest: CGEventMask, callback: CGEventTapCallBack,
         userInfo: UnsafeMutableRawPointer?
     ) -> CFMachPort? {
-        let (fail, gate) = fixture.withLock { fixture in
+        let (fail, gate) = fixture.withLockUnchecked { fixture in
             fixture.attempts += 1
             fixture.touchedMainThread = fixture.touchedMainThread || Thread.isMainThread
             fixture.wrongConfiguration =
@@ -51,7 +51,7 @@ extension CGEvent {
         var context = CFMachPortContext()
         guard let port = CFMachPortCreate(kCFAllocatorDefault, { _, _, _, _ in }, &context, nil)
         else { return nil }
-        fixture.withLock {
+        fixture.withLockUnchecked {
             $0.records.append(
                 TapRecord(
                     port: port, runLoop: CFRunLoopGetCurrent(), callback: callback, userInfo: userInfo))
@@ -64,7 +64,7 @@ extension CGEvent {
     }
 
     static func tapEnable(tap: CFMachPort, enable: Bool) {
-        fixture.withLock { fixture in
+        fixture.withLockUnchecked { fixture in
             fixture.touchedMainThread = fixture.touchedMainThread || Thread.isMainThread
             if enable, let index = fixture.records.firstIndex(where: { $0.port === tap }) {
                 fixture.records[index].enables += 1
@@ -99,7 +99,7 @@ struct CommandEscapeTapTests {
     private nonisolated static func schedule(
         _ index: Int, _ body: @escaping @Sendable (TapRecord) -> Void
     ) {
-        fixture.withLock { fixture in
+        fixture.withLockUnchecked { fixture in
             let record = fixture.records[index]
             CFRunLoopPerformBlock(record.runLoop, CFRunLoopMode.defaultMode.rawValue) {
                 body(record)
@@ -127,13 +127,13 @@ struct CommandEscapeTapTests {
         let completed = DispatchSemaphore(value: 0)
         schedule(index) { record in
             let claimed = invoke(record, type: type, keyCode: keyCode, flags: flags)
-            result.withLock { $0 = claimed }
+            result.withLockUnchecked { $0 = claimed }
             completed.signal()
         }
         expect(
             completed.wait(timeout: .now() + 2) == .success,
             "the worker returns while the main thread is blocked")
-        return result.withLock { $0 }
+        return result.withLockUnchecked { $0 }
     }
 
     static func expectSignal(_ semaphore: DispatchSemaphore, _ message: String) {
@@ -141,20 +141,20 @@ struct CommandEscapeTapTests {
     }
 
     static func isClosed(_ index: Int) -> Bool {
-        fixture.withLock { !CFMachPortIsValid($0.records[index].port) }
+        fixture.withLockUnchecked { !CFMachPortIsValid($0.records[index].port) }
     }
 
     static func enables(_ index: Int) -> Int {
-        fixture.withLock { $0.records[index].enables }
+        fixture.withLockUnchecked { $0.records[index].enables }
     }
 
     static func main() async {
         var fires = 0
         let tap = CommandEscapeTap { fires += 1 }
         tap.enable()
-        await waitFor("the tap installs", { fixture.withLock { $0.records.count == 1 } })
+        await waitFor("the tap installs", { fixture.withLockUnchecked { $0.records.count == 1 } })
         tap.enable()
-        expect(fixture.withLock { $0.attempts == 1 }, "repeated enable does not create another worker")
+        expect(fixture.withLockUnchecked { $0.attempts == 1 }, "repeated enable does not create another worker")
         expect(deliver(0, keyCode: kVK_ANSI_A, flags: []) == false, "ordinary typing passes through")
         expect(deliver(0, flags: [.maskCommand, .maskAlternate]) == false, "Force Quit passes through")
         expect(deliver(0) == true, "the worker swallows Command-Escape without waiting for main")
@@ -168,7 +168,7 @@ struct CommandEscapeTapTests {
         expect(deliver(0) == true, "a second chord is queued")
         tap.disable()
         tap.enable()
-        await waitFor("a new session installs", { fixture.withLock { $0.records.count == 2 } })
+        await waitFor("a new session installs", { fixture.withLockUnchecked { $0.records.count == 2 } })
         expect(fires == 1, "a queued action cannot affect a reopened palette")
         await waitFor("the previous session tears down", { isClosed(0) })
         expect(deliver(1) == true, "the new session accepts its own chord")
@@ -184,7 +184,7 @@ struct CommandEscapeTapTests {
             _ = invoke(record, type: .tapDisabledByTimeout)
             _ = invoke(record, type: .tapDisabledByUserInput)
             let claimed = invoke(record)
-            claimedAfterClose.withLock { $0 = claimed }
+            claimedAfterClose.withLockUnchecked { $0 = claimed }
             completed.signal()
         }
         expectSignal(gate.entered, "the late notification is pending")
@@ -192,25 +192,25 @@ struct CommandEscapeTapTests {
         gate.resume.signal()
         expectSignal(completed, "the late callbacks complete")
         expect(enables(1) == beforeClose, "late notifications cannot resurrect a closed session")
-        expect(claimedAfterClose.withLock { $0 } == false, "a closing session stops swallowing chords")
+        expect(claimedAfterClose.withLockUnchecked { $0 } == false, "a closing session stops swallowing chords")
         await waitFor("the stopped run loop exits", { isClosed(1) })
 
         let installing = InstallationGate()
-        fixture.withLock { $0.gate = installing }
+        fixture.withLockUnchecked { $0.gate = installing }
         tap.enable()
         expectSignal(installing.entered, "installation is pending")
         tap.disable()
         installing.resume.signal()
         await waitFor("closing during installation cleans up the port", { isClosed(2) })
 
-        fixture.withLock { $0.failNext = true }
-        let attempts = fixture.withLock { $0.attempts }
+        fixture.withLockUnchecked { $0.failNext = true }
+        let attempts = fixture.withLockUnchecked { $0.attempts }
         tap.enable()
         await waitFor(
             "a refused tap can retry on the next enable",
             {
                 tap.enable()
-                return fixture.withLock { $0.attempts >= attempts + 2 && $0.records.count == 4 }
+                return fixture.withLockUnchecked { $0.attempts >= attempts + 2 && $0.records.count == 4 }
             })
         expect(deliver(3) == true, "a retried installation handles the chord")
         await waitFor("the retry dispatches normally", { fires == 3 })
@@ -220,7 +220,7 @@ struct CommandEscapeTapTests {
         var disposable: CommandEscapeTap? = CommandEscapeTap {}
         let isReleased = { [weak disposable] in disposable == nil }
         disposable?.enable()
-        await waitFor("the disposable tap installs", { fixture.withLock { $0.records.count == 5 } })
+        await waitFor("the disposable tap installs", { fixture.withLockUnchecked { $0.records.count == 5 } })
         _ = deliver(4, keyCode: kVK_ANSI_A)
         disposable = nil
         expect(isReleased(), "the worker does not retain its owner")
@@ -233,10 +233,10 @@ struct CommandEscapeTapTests {
         await waitFor(
             "rapid show and hide leaves no valid ports",
             {
-                fixture.withLock { $0.records.allSatisfy { !CFMachPortIsValid($0.port) } }
+                fixture.withLockUnchecked { $0.records.allSatisfy { !CFMachPortIsValid($0.port) } }
             })
-        expect(fixture.withLock { !$0.wrongConfiguration }, "the tap keeps the required HID signature")
-        expect(fixture.withLock { !$0.touchedMainThread }, "tap installation and control stay off main")
+        expect(fixture.withLockUnchecked { !$0.wrongConfiguration }, "the tap keeps the required HID signature")
+        expect(fixture.withLockUnchecked { !$0.touchedMainThread }, "tap installation and control stay off main")
         expect(fires == 3, "closed sessions never deliver an action")
         print("\(passes) passed, \(failures) failed")
         if failures > 0 { exit(1) }

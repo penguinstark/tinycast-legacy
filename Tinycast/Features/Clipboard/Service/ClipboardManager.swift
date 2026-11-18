@@ -26,9 +26,9 @@ final class ClipboardManager {
     }
 
     // Isolated so teardown can touch the main-actor timer; the poll block is already weak.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         timer?.invalidate()
-    }
+    }}
 
     func start() {
         guard !isCapturing else { return }

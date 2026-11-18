@@ -101,9 +101,9 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
     }
 
     // Isolated so teardown may touch the main-actor monitor; the block is already weak.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         if let pasteMonitor { NSEvent.removeMonitor(pasteMonitor) }
-    }
+    }}
 
     /// The character a bare-⌘ chord names, through the ASCII layout so an IME cannot move it.
     private static func commandCharacter(from event: NSEvent) -> String? {

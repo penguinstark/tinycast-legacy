@@ -6,8 +6,8 @@ verifying a change is [testing.md](testing.md).
 ## Requirements
 
 - macOS 14.4 or later (Sonoma).
-- Xcode 26 or later — the sources use Swift 6.2 features and the SwiftUI macro plugin, and the
-  build is verified against the macOS 26 SDK.
+- Xcode 16.2 or later — this branch holds to Swift 6.0 and the SwiftUI macro plugin, and the build
+  is verified against Xcode 16.2's macOS 15.2 SDK.
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen), and for linting:
   `brew install swiftlint`.
 - Node, for the generators and the local test stub servers `run-tests.sh` drives. It is the only

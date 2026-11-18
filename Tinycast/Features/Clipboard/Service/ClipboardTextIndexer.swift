@@ -27,9 +27,9 @@ final class ClipboardTextIndexer {
         self.extract = extract
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         task?.cancel()
-    }
+    }}
 
     static var isSystemIdle: Bool {
         CGEventSource.secondsSinceLastEventType(.combinedSessionState, eventType: .null) >= idleWindow

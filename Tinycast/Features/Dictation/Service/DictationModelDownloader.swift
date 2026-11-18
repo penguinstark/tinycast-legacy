@@ -52,7 +52,7 @@ enum DictationModelDownloader {
         let staging = root.appendingPathComponent(".\(UUID().uuidString)")
         try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
         defer { try? fileManager.removeItem(at: staging) }
-        var files = try await manifest(
+        let files = try await manifest(
             repository: model.repository, revision: model.revision,
             components: model.components, baseURL: baseURL, using: session)
         var total: Int64 = 0

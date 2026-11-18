@@ -165,7 +165,7 @@ final class ExtensionHostBridge: ExtensionHostAPI {
         }
     }
 
-    private func fetch(_ spec: RenderValue?) async throws -> [String: Any] {
+    private func fetch(_ spec: RenderValue?) async throws -> sending [String: Any] {
         let context = context
         let name = context?.activeExtensionName
         do {
@@ -382,7 +382,7 @@ final class ExtensionHostBridge: ExtensionHostAPI {
 
     // MARK: - Feedback
 
-    private func feedback(method: String, arguments: [RenderValue]) async throws -> Any? {
+    private func feedback(method: String, arguments: [RenderValue]) async throws -> sending Any? {
         guard let context else { throw ExtensionHostError.noActiveExtension }
         guard context.activeLaunchType != .background else { return nil }
         switch method {
@@ -416,7 +416,7 @@ final class ExtensionHostBridge: ExtensionHostAPI {
 
     // MARK: - OAuth
 
-    private func oauth(method: String, arguments: [RenderValue]) async throws -> Any? {
+    private func oauth(method: String, arguments: [RenderValue]) async throws -> sending Any? {
         let (context, name) = try requireContext()
         switch method {
         case "authorize":
@@ -455,7 +455,7 @@ final class ExtensionHostBridge: ExtensionHostAPI {
 
     // MARK: - System
 
-    private func system(method: String, arguments: [RenderValue]) async throws -> Any? {
+    private func system(method: String, arguments: [RenderValue]) async throws -> sending Any? {
         switch method {
         case "open":
             guard let target = arguments.first?.stringValue else { return nil }

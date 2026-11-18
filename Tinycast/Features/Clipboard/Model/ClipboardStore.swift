@@ -324,10 +324,10 @@ final class ClipboardStore {
     }
 
     // Isolated so teardown may touch the main-actor pointers; the release is already on main.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         textSearchTask?.cancel()
         closeDatabase()
-    }
+    }}
 
     func load() {
         invalidateSearch()

@@ -215,7 +215,7 @@ struct LauncherSettingsFileTest {
                 appIndex: index, aliases: aliases, visibility: visibility, shortcuts: shortcuts)
         }
 
-        isolated deinit { defaults.removePersistentDomain(forName: suite) }
+        deinit { MainActor.assumeIsolated { defaults.removePersistentDomain(forName: suite) } }
     }
 }
 

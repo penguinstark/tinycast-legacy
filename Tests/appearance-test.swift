@@ -31,7 +31,9 @@ struct AppearanceTests {
     static func dark(_ label: String, _ token: Color, is expected: Color) {
         let actual = components(token, .darkAqua)
         let wanted = components(expected, .darkAqua)
-        check("dark \(label)", actual == wanted, "\(actual) != \(wanted)")
+        // A ramp and an opacity can disagree by the last bit; the framebuffer cannot show it.
+        let matches = zip(actual, wanted).allSatisfy { abs($0 - $1) <= 1 }
+        check("dark \(label)", matches, "\(actual) != \(wanted)")
     }
 
     /// A token that resolves identically in both never adapted at all.

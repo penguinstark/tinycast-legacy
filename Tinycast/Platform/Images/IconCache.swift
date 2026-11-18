@@ -192,14 +192,14 @@ enum IconCache {
     }
 
     /// Returns the decode directly, so a purge mid-decode can't strand a placeholder.
-    static func loadAsync(forFile path: String, stamp: Int = 0, size: IconSize? = nil) async -> NSImage? {
+    static func loadAsync(forFile path: String, stamp: Int = 0, size: IconSize? = nil) async -> sending NSImage? {
         if let cached = cached(forFile: path, stamp: stamp, size: size) { return cached }
         return await Task.detached(priority: .userInitiated) { () -> Decoded in
             guard FileManager.default.fileExists(atPath: path) else { return Decoded(image: nil) }
             return Decoded(image: icon(forFile: path, stamp: stamp, size: size))
         }.value.image
     }
-    static func loadSymbolAsync(named name: String, tint: SymbolTint? = nil) async -> NSImage? {
+    static func loadSymbolAsync(named name: String, tint: SymbolTint? = nil) async -> sending NSImage? {
         if let cached = cachedSymbol(named: name, tint: tint) { return cached }
         return await Task.detached(priority: .userInitiated) {
             Decoded(image: symbolIcon(named: name, tint: tint))
@@ -325,7 +325,7 @@ enum IconCache {
         cache.object(forKey: artworkKey(path, extent))
     }
 
-    static func loadArtworkAsync(atPath path: String, extent: CGFloat) async -> NSImage? {
+    static func loadArtworkAsync(atPath path: String, extent: CGFloat) async -> sending NSImage? {
         if let cached = cachedArtwork(atPath: path, extent: extent) { return cached }
         return await Task.detached(priority: .userInitiated) {
             Decoded(image: artwork(atPath: path, extent: extent))
@@ -344,7 +344,7 @@ enum IconCache {
         cache.object(forKey: contentTypeKey(identifier))
     }
 
-    static func loadContentTypeIconAsync(_ identifier: String) async -> NSImage? {
+    static func loadContentTypeIconAsync(_ identifier: String) async -> sending NSImage? {
         if let cached = cachedContentTypeIcon(identifier) { return cached }
         return await Task.detached(priority: .userInitiated) {
             Decoded(image: contentTypeIcon(identifier))
@@ -382,7 +382,7 @@ enum IconCache {
         }
     }
 
-    static func loadAsync(_ source: EntryIcon, fileURL: URL, size: IconSize? = nil) async -> NSImage? {
+    static func loadAsync(_ source: EntryIcon, fileURL: URL, size: IconSize? = nil) async -> sending NSImage? {
         switch source {
         case .file(let stamp): return await loadAsync(forFile: fileURL.path, stamp: stamp, size: size)
         case .symbol(let name): return await loadSymbolAsync(named: name)
@@ -398,7 +398,7 @@ enum IconCache {
     }
 
     /// Like `loadAsync`, normalized so every file type paints to the same visual size.
-    static func loadFittedAsync(forFile path: String) async -> NSImage? {
+    static func loadFittedAsync(forFile path: String) async -> sending NSImage? {
         if let cached = cachedFitted(forFile: path) { return cached }
         let generation = fittedGeneration.withLock { $0.value }
         let decoded = await Task.detached(
@@ -411,7 +411,7 @@ enum IconCache {
             }
         ).value
         guard let image = decoded.image, !Task.isCancelled else { return nil }
-        return fittedGeneration.withLock { current in
+        return fittedGeneration.withLockUnchecked { current in
             current.publish(image, capturedAt: generation) { image in
                 fittedCache.setObject(image, forKey: fittedKey(path), cost: decoded.cost)
             }

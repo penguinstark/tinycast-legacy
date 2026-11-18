@@ -34,7 +34,7 @@ final class ExtensionFetcher: Sendable {
         }
     }
 
-    func request(_ spec: RenderValue?) async throws -> [String: Any] {
+    func request(_ spec: RenderValue?) async throws -> sending [String: Any] {
         let fields = spec?.objectValue ?? [:]
         let urlString = fields["url"]?.stringValue ?? ""
         guard let url = URL(string: urlString), url.scheme != nil else {
@@ -74,7 +74,6 @@ final class ExtensionFetcher: Sendable {
         ]
     }
 
-    @concurrent
     private static func socketResponse(
         for request: URLRequest, socketPath: String
     ) async throws -> (Data, HTTPURLResponse) {
@@ -247,7 +246,7 @@ enum ExtensionAsyncProcess {
         }
     }
 
-    static func wait(_ pid: RenderValue?) async throws -> [String: Any] {
+    static func wait(_ pid: RenderValue?) async throws -> sending [String: Any] {
         guard let pid = pid?.doubleValue.flatMap({ Int32(exactly: $0) }),
             let entry = uncollected.withLockUnchecked({ $0.removeValue(forKey: pid) })
         else { throw ProcessError.notStarted }

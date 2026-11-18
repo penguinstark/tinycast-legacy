@@ -169,9 +169,10 @@ struct FormTextArea: NSViewRepresentable {
             _ textStorage: NSTextStorage, didProcessEditing editedMask: NSTextStorageEditActions,
             range editedRange: NSRange, changeInLength delta: Int
         ) {
+            let text = textStorage.string
             MainActor.assumeIsolated {
                 guard !isUpdating, editedMask.contains(.editedCharacters) else { return }
-                input.text = textStorage.string
+                input.text = text
                 view?.invalidateIntrinsicContentSize()
             }
         }

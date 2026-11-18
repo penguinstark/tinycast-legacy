@@ -29,9 +29,9 @@ final class CommandEscapeTap {
         self.onChord = onChord
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         session?.stop()
-    }
+    }}
 
     nonisolated static func isChord(keyCode: Int64, flags: CGEventFlags) -> Bool {
         keyCode == Int64(kVK_Escape)
@@ -113,9 +113,10 @@ final class CommandEscapeTap {
                 else { return }
                 CFRunLoopAddSource(runLoop, source, .defaultMode)
                 defer { CFRunLoopRemoveSource(runLoop, source, .defaultMode) }
+                let installation = Installation(port: port, runLoop: runLoop)
                 let shouldRun = state.withLock { state in
                     guard state.isActive else { return false }
-                    state.installation = Installation(port: port, runLoop: runLoop)
+                    state.installation = installation
                     return true
                 }
                 guard shouldRun else { return }

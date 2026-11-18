@@ -29,10 +29,10 @@ final class HyperKeyTap {
     private var hidConnect: io_connect_t = IO_OBJECT_NULL
 
     // Isolated so teardown can release the main-actor IOKit connection.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         tearDown()
         if hidConnect != IO_OBJECT_NULL { IOServiceClose(hidConnect) }
-    }
+    }}
 
     var isEnabled: Bool? { session?.isEnabled }
     var runLoopSourceIsValid: Bool? { session?.runLoopSourceIsValid }
@@ -194,7 +194,8 @@ final class HyperKeyTap {
                     callback: hyperKeyTapCallback,
                     userInfo: Unmanaged.passUnretained(self).toOpaque())
             else { return nil }
-            state.withLock { $0.installation = Installation(port: port) }
+            let installation = Installation(port: port)
+            state.withLock { $0.installation = installation }
             let thread = Thread { [self] in run() }
             thread.name = "com.tinycast.hyper-key"
             thread.qualityOfService = .userInteractive
@@ -247,9 +248,10 @@ final class HyperKeyTap {
                 else { return }
                 CFRunLoopAddSource(runLoop, source, .defaultMode)
                 defer { CFRunLoopRemoveSource(runLoop, source, .defaultMode) }
+                let installation = Installation(port: port, source: source, runLoop: runLoop)
                 let shouldRun = state.withLock { state in
                     guard state.isRunning else { return false }
-                    state.installation = Installation(port: port, source: source, runLoop: runLoop)
+                    state.installation = installation
                     return true
                 }
                 guard shouldRun else { return }

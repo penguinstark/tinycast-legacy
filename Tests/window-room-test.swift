@@ -308,7 +308,7 @@ struct WindowRoomTests {
         let side = Array(stack.dropFirst())
         expect(inside(stack, box), "a stack stays on screen")
         expect(stack[0].width >= (box.width - gap) * 0.6 - 1, "the main window keeps its share")
-        expect(Set(side.map(\.size)).count == 1, "stacked windows share one size")
+        expect(Set(side.map { [$0.width, $0.height] }).count == 1, "stacked windows share one size")
         expect(side[0].minY > side[1].minY && side[1].minY > side[2].minY, "the second window sits lowest")
         expect(side[0].minY - side[1].minY == RoomLayoutEngine.peek, "each title bar peeks out")
         expect(side.allSatisfy { $0.height >= 454 }, "a stack still honours minimum heights")

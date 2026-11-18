@@ -914,7 +914,7 @@ struct WindowCommandTests {
             for command in [WindowCommand.ID.leftHalf, .rightHalf] {
                 let lap = presses(command, length(command, .displays, both), from: start, on: both)
                 expect(
-                    Set(lap.map(\.frame)).count == lap.count,
+                    Set(lap.map { [$0.frame.minX, $0.frame.minY, $0.frame.width, $0.frame.height] }).count == lap.count,
                     "\(command.rawValue) visits four distinct slots")
                 expect(
                     Set(lap.map(\.screenID)) == [1, 2],

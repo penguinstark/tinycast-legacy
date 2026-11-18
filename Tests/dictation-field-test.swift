@@ -377,7 +377,7 @@ struct DictationFieldTest {
             self.window = window
         }
 
-        var editor: ComposerTextView? { window?.contentView.flatMap(Self.findEditor) }
+        var editor: ComposerTextView? { window?.contentView.flatMap { Self.findEditor($0) } }
 
         func close() {
             window?.close()
@@ -386,7 +386,7 @@ struct DictationFieldTest {
 
         private static func findEditor(_ view: NSView) -> ComposerTextView? {
             if let editor = view as? ComposerTextView { return editor }
-            return view.subviews.lazy.compactMap(findEditor).first
+            return view.subviews.lazy.compactMap { findEditor($0) }.first
         }
     }
 }
