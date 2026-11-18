@@ -11,8 +11,10 @@ struct DictationInferenceTest {
         let fixtures: [[Float16]] = [[-5, -1, -1, -3], [4, 4, -2], [-2, 0, 3], [7], tied, wide]
         for values in fixtures {
             let scores = try DictationTensor.zeros([1, 1, values.count], type: .float16)
-            scores.withUnsafeMutableBufferPointer(ofType: Float16.self) { buffer, _ in
-                _ = buffer.update(from: values)
+            scores.withUnsafeMutableBytes { bytes, _ in
+                values.withUnsafeBytes { source in
+                    bytes.baseAddress!.copyMemory(from: source.baseAddress!, byteCount: source.count)
+                }
             }
             let expected = values.indices.reduce(0) { values[$1] > values[$0] ? $1 : $0 }
             guard try DictationTensor.indexOfMaximum(in: scores) == expected else {

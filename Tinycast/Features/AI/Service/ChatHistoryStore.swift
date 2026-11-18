@@ -106,8 +106,8 @@ final class ChatHistoryStore {
         databaseURL = directory.appendingPathComponent("ai-chats.sqlite3")
     }
 
-    isolated deinit {
-        sqlite3_close(database)
+    deinit {
+        MainActor.assumeIsolated { _ = sqlite3_close(database) }
     }
 
     func load() {

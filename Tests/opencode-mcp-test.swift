@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 @main
 struct OpenCodeMCPTest {
@@ -7,11 +8,11 @@ struct OpenCodeMCPTest {
         let tool = AITool(
             name: "mcp_test_echo", description: "Echo", parameters: .object(["type": .string("object")]),
             origin: "Test", title: "Echo")
-        var calls: [AIToolCall] = []
+        let calls = OSAllocatedUnfairLock(initialState: [AIToolCall]())
         var events: [AIStreamEvent] = []
         var failures: [String] = []
         let session = AIToolSession(tools: [tool], maxCalls: 2) { call in
-            await MainActor.run { calls.append(call) }
+            calls.withLock { $0.append(call) }
             return AIToolResult(callID: call.id, content: call.arguments, isError: false)
         }
         let bridge = OpenCodeMCPBridge(session: session) {
@@ -87,37 +88,36 @@ struct OpenCodeMCPTest {
         assert(list.1?.objectValue?["result"]?.objectValue?["tools"]?.arrayValue?.count == 1)
         let unknown = try await request("tools/call", params: ["name": "shell", "arguments": [:]])
         assert(unknown.1?.objectValue?["result"]?.objectValue?["isError"] == .bool(true))
-        assert(calls.isEmpty && events.isEmpty)
+        assert(calls.withLock { $0.isEmpty } && events.isEmpty)
         let reply = try await request(
             "tools/call",
             params: [
                 "name": wireName, "arguments": ["text": "hello"]
             ])
         assert(reply.1?.objectValue?["result"]?.objectValue?["isError"] == .bool(false))
-        assert(calls.count == 1 && calls[0].name == tool.name)
-        assert(JSONValue(data: Data(calls[0].arguments.utf8))?.objectValue?["text"] == .string("hello"))
+        assert(calls.withLock { $0.count == 1 && $0[0].name == tool.name })
+        assert(JSONValue(data: Data(calls.withLock { $0[0] }.arguments.utf8))?.objectValue?["text"] == .string("hello"))
         assert(
             events == [
-                .toolCall(id: calls[0].id, origin: "Test", title: "Echo"),
-                .toolResult(id: calls[0].id, isError: false)
+                .toolCall(id: calls.withLock { $0[0] }.id, origin: "Test", title: "Echo"),
+                .toolResult(id: calls.withLock { $0[0] }.id, isError: false)
             ])
         _ = try await request("tools/call", params: ["name": wireName])
         do {
             _ = try await request("tools/call", params: ["name": wireName])
         } catch {}
-        assert(calls.count == 2 && failures.count == 1)
+        assert(calls.withLock { $0.count } == 2 && failures.count == 1)
         bridge.stop()
 
-        var running = 0
-        var peak = 0
+        let counters = OSAllocatedUnfairLock(initialState: (running: 0, peak: 0))
         var budgetFailures: [String] = []
         let budgetSession = AIToolSession(tools: [tool], maxCalls: nil) { call in
-            await MainActor.run {
-                running += 1
-                peak = max(peak, running)
+            counters.withLock {
+                $0.running += 1
+                $0.peak = max($0.peak, $0.running)
             }
             try? await Task.sleep(for: .milliseconds(20))
-            await MainActor.run { running -= 1 }
+            counters.withLock { $0.running -= 1 }
             return .failure(call.id, String(repeating: "x", count: 100_000))
         }
         let budgetBridge = OpenCodeMCPBridge(session: budgetSession, event: { _ in }) {
@@ -133,7 +133,7 @@ struct OpenCodeMCPTest {
             let text = result["content"]!.arrayValue![0].objectValue!["text"]!.stringValue!
             assert(text.utf8.count < 33_000 && text.hasSuffix("…truncated."))
         }
-        assert(peak == 1)
+        assert(counters.withLock { $0.peak } == 1)
         for _ in 0..<2 {
             _ = try await request("tools/call", params: ["name": wireName], configuration: budgetConfig)
         }
@@ -143,18 +143,22 @@ struct OpenCodeMCPTest {
         assert(budgetFailures.count == 1)
         budgetBridge.stop()
 
-        var started: CheckedContinuation<Void, Never>?
-        var cancelled: CheckedContinuation<Void, Never>?
+        let started =
+            OSAllocatedUnfairLock<CheckedContinuation<Void, Never>?>(initialState: nil)
+        let cancelled =
+            OSAllocatedUnfairLock<CheckedContinuation<Void, Never>?>(initialState: nil)
         var cancellationEvents: [AIStreamEvent] = []
         let cancellationSession = AIToolSession(tools: [tool], maxCalls: nil) { call in
-            await MainActor.run {
-                started?.resume(); started = nil
+            started.withLock {
+                $0?.resume()
+                $0 = nil
             }
             do {
                 try await Task.sleep(for: .seconds(60))
             } catch {
-                await MainActor.run {
-                    cancelled?.resume(); cancelled = nil
+                cancelled.withLock {
+                    $0?.resume()
+                    $0 = nil
                 }
             }
             return .failure(call.id, "Cancelled")
@@ -168,9 +172,9 @@ struct OpenCodeMCPTest {
         let pending = Task {
             try? await request("tools/call", params: ["name": wireName], configuration: cancellationConfig)
         }
-        await withCheckedContinuation { started = $0 }
+        await withCheckedContinuation { continuation in started.withLock { $0 = continuation } }
         cancellationBridge.stop()
-        await withCheckedContinuation { cancelled = $0 }
+        await withCheckedContinuation { continuation in cancelled.withLock { $0 = continuation } }
         _ = await pending.value
         assert(cancellationEvents.count == 1)
         try await installedTurn(tool: tool)

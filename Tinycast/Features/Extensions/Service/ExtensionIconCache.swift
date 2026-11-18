@@ -57,7 +57,7 @@ enum ExtensionIconCache {
     // MARK: - Carried inline by the extension
 
     /// Uncached and unfitted: the payload is resident and the extension has sized it.
-    static func loadInlineAsync(_ url: URL, palette: [String: String]) async -> NSImage? {
+    static func loadInlineAsync(_ url: URL, palette: [String: String]) async -> sending NSImage? {
         guard let data = inlineData(url) else { return nil }
         let names = isSVG(url) ? palette : [:]
         return await Task.detached(priority: .userInitiated) {
@@ -114,7 +114,7 @@ enum ExtensionIconCache {
     // MARK: - Fetched by the extension
 
     /// A failure caches nothing, so a transient error retries; `asIcon` is off for markdown images.
-    static func loadRemoteAsync(_ url: URL, asIcon: Bool = true) async -> NSImage? {
+    static func loadRemoteAsync(_ url: URL, asIcon: Bool = true) async -> sending NSImage? {
         let key = remoteKey(url, asIcon: asIcon)
         if let cached = cache.object(forKey: key) { return cached }
         guard let (data, _) = try? await session.data(from: url) else { return nil }

@@ -1332,7 +1332,7 @@ struct CalcTests {
         expectDisplayAt("now + 90 min", "24 July at 01:48", calendar: hour24)
         expectDisplayAt("time in sf", "17:18 (yesterday)", calendar: britain)
         expectBadgesAt("hrs till 9am", source: "00:18", target: "09:00", calendar: britain)
-        expectDisplayAt("time in sf", "5:18 pm (yesterday)", calendar: britain12)
+        expectDisplayAt("time in sf", "5:18 PM (yesterday)", calendar: britain12)
 
         let zoneNow = clock.calendar.date(
             from: DateComponents(year: 2026, month: 9, day: 15, hour: 12))!

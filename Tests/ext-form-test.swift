@@ -26,7 +26,7 @@ struct ExtensionFormTests {
         datePresets()
         dateParsing()
         dateSuggestions()
-        ExtensionListKeyTests.run(check: check)
+        ExtensionListKeyTests.run(check: { check($0, $1, $2) })
         formActivation()
 
         print(failures == 0 ? "\nALL PASSED" : "\n\(failures) FAILED")

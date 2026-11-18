@@ -23,7 +23,7 @@ if [ "${1:-}" = "--exec" ]; then
         exit 0
     }
     TIMEFORMAT=%1R
-    if ! compiled=$( { time swiftc -swift-version 6 "$opt" "$@" "Tests/$name.swift" -o "$BIN/$name" > "$BIN/$name.log" 2>&1; } 2>&1 ); then
+    if ! compiled=$( { time swiftc -swift-version 6 -target "$(uname -m)-apple-macos14.4" "$opt" "$@" "Tests/$name.swift" -o "$BIN/$name" > "$BIN/$name.log" 2>&1; } 2>&1 ); then
         fail "did not compile"
     fi
     { time "$BIN/$name" > "$BIN/$name.log" 2>&1; } 2> "$BIN/$name.time" &

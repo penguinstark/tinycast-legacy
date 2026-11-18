@@ -109,12 +109,12 @@ struct ExtensionIconTests {
     static func drawnInk(
         _ svg: String, isDark: Bool, base64: Bool = false, query: String = ""
     ) async -> CGFloat? {
-        await drawnImage(svg, isDark: isDark, base64: base64, query: query).flatMap(inkExtent)
+        await drawnImage(svg, isDark: isDark, base64: base64, query: query).flatMap { inkExtent($0) }
     }
 
     /// The colour an unresolved name never produces, since the shape it strokes draws nothing.
     static func drawnColor(_ svg: String, isDark: Bool) async -> NSColor? {
-        await drawnImage(svg, isDark: isDark).flatMap(inkColor)
+        await drawnImage(svg, isDark: isDark).flatMap { inkColor($0) }
     }
 
     /// A `data:` URL in either encoding, with Detail markdown's sizing query appended.

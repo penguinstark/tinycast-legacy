@@ -10,9 +10,9 @@ final class RemapInstanceLock {
         self.url = url
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         release()
-    }
+    }}
 
     var isHeld: Bool { descriptor >= 0 }
 

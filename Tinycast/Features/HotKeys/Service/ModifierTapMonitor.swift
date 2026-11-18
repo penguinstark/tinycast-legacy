@@ -68,9 +68,9 @@ final class ModifierTapMonitor: HealthCheckable {
     @ObservationIgnored weak var healthTicker: HealthTicker?
 
     // The tap holds an unretained `self`, so it must not outlive it.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         tearDownTap()
-    }
+    }}
 
     func start() {
         installObserversIfNeeded()

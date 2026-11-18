@@ -33,12 +33,12 @@ final class SnippetsStore {
         snippetsDirectory = repository.snippetsDirectory
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         reloadTask?.cancel()
         watcherRetryTask?.cancel()
         directoryWatcher?.cancel()
         for source in fileWatchers.values { source.cancel() }
-    }
+    }}
 
     func start() async {
         guard !isStarted else { return }

@@ -3,7 +3,7 @@ import Foundation
 
 /// A process of its own, so every byte the crawl allocates leaves when it exits.
 @main
-nonisolated enum FileIndexHelper {
+enum FileIndexHelper {
     static func main() {
         let arguments = CommandLine.arguments
         guard arguments.count == 3,

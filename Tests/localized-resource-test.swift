@@ -30,6 +30,14 @@ struct LocalizedResourceTests {
         exit(failures == 0 ? 0 : 1)
     }
 
+    /// `/usr/bin/xcrun` cannot load Xcode 16.2's arm64 shim on this host, so call the tool directly.
+    private static var xcstringstool: URL {
+        let developer =
+            ProcessInfo.processInfo.environment["DEVELOPER_DIR"]
+            ?? "/Applications/Xcode.app/Contents/Developer"
+        return URL(fileURLWithPath: developer).appendingPathComponent("usr/bin/xcstringstool")
+    }
+
     /// `resolved()` reads `Bundle.main`, so each language runs a copy that sits beside the tables.
     private static func checkEachLanguage() throws {
         let root = FileManager.default.temporaryDirectory
@@ -37,9 +45,9 @@ struct LocalizedResourceTests {
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: root) }
         let compile = Process()
-        compile.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+        compile.executableURL = Self.xcstringstool
         compile.arguments = [
-            "xcstringstool", "compile", "Tinycast/Resources/Localizable.xcstrings",
+            "compile", "Tinycast/Resources/Localizable.xcstrings",
             "--output-directory", root.path
         ]
         try compile.run()

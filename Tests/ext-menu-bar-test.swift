@@ -344,12 +344,12 @@ extension ExtensionTests {
         check(
             "unloading preserves submenu action appearance",
             item?.isEnabled == true && item?.representedObject == nil)
-        let newImage = NSImage(size: NSSize(width: 14, height: 14))
-        pending.removeFirst().resume(returning: newImage)
+        let newImageSize = NSSize(width: 15, height: 15)
+        pending.removeFirst().resume(returning: NSImage(size: newImageSize))
         await settle(20)
         check(
             "late images update rows without restoring expired callbacks",
-            item?.image === newImage
+            item?.image?.size == newImageSize
                 && item?.isEnabled == true && item?.representedObject == nil)
 
         var attempts: [CGFloat: Int] = [:]

@@ -8,7 +8,7 @@ enum WindowTarget {
 
     /// Our panels never activate, so the frontmost app is not what the user is looking at.
     static func current() -> WindowTarget? {
-        if let own = NSApp.keyWindow.flatMap { placeable($0) } { return .own(own) }
+        if let window = NSApp.keyWindow, let own = placeable(window) { return .own(own) }
         return FrontmostApp.current.map(WindowTarget.external)
     }
 
@@ -16,7 +16,7 @@ enum WindowTarget {
     static func behindPalette(
         ownWindow: NSWindow?, app: NSRunningApplication?
     ) -> WindowTarget? {
-        if let own = ownWindow.flatMap { placeable($0) } { return .own(own) }
+        if let window = ownWindow, let own = placeable(window) { return .own(own) }
         return app.map(WindowTarget.external)
     }
 

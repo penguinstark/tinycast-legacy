@@ -19,12 +19,12 @@ final class SettingsFileMonitor {
         self.fileURL = fileURL
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         settleTask?.cancel()
         retryTask?.cancel()
         folderSource?.cancel()
         fileSource?.cancel()
-    }
+    }}
 
     func start() {
         arm()

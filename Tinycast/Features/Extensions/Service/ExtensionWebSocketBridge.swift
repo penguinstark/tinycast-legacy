@@ -26,7 +26,7 @@ final class ExtensionWebSocketBridge: NSObject, Sendable, URLSessionWebSocketDel
         }
     }
 
-    func perform(method: String, arguments: [RenderValue]) async throws -> Any? {
+    func perform(method: String, arguments: [RenderValue]) async throws -> sending Any? {
         let fields = arguments.first?.objectValue ?? [:]
         switch method {
         case "open": return try await open(fields)

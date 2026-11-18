@@ -11,7 +11,7 @@ final class ExtensionMenuBarController: NSObject, NSMenuDelegate {
     private let status: NSStatusItem
     let menu = NSMenu()
     private let assetsPath: String
-    private let loadImage: (RenderValue?, String, CGFloat) async -> NSImage?
+    private let loadImage: @MainActor (RenderValue?, String, CGFloat) async -> NSImage?
     private var snapshot: ExtensionMenuBarSnapshot?
     private var iconTask: Task<Void, Never>?
     private var menuImageTask: Task<Void, Never>?
@@ -46,7 +46,7 @@ final class ExtensionMenuBarController: NSObject, NSMenuDelegate {
 
     init(
         entryID: String, assetsPath: String, isVisible: Bool = true,
-        loadImage: @escaping (RenderValue?, String, CGFloat) async -> NSImage? = {
+        loadImage: @escaping @MainActor (RenderValue?, String, CGFloat) async -> NSImage? = {
             await ExtensionMenuBarImage.loadAdaptive($0, assetsPath: $1, size: $2)
         }
     ) {

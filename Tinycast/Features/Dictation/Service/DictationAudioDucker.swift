@@ -34,7 +34,7 @@ final class DictationAudioDucker {
         self.resolveOutput = resolveOutput
     }
 
-    isolated deinit { transition?.cancel() }
+    deinit {MainActor.assumeIsolated { transition?.cancel() }}
 
     func recover() {
         schedule { _ = try await $0.recoverSavedVolume() }

@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated enum DictationWire {
+enum DictationWire {
     enum Failure: LocalizedError {
         case notInstalled, busy, unavailable
         var errorDescription: String? {

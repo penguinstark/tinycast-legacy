@@ -1,7 +1,7 @@
 import AppKit
 
 /// Turns a file or pasted picture into what a composer stages; every call runs off-main.
-nonisolated enum ChatAttachmentReader {
+enum ChatAttachmentReader {
     /// Carries what a staged file becomes across the detached read.
     struct Staged: Sendable {
         let payload: ChatAttachment.Payload

@@ -2,6 +2,7 @@
 
 import AppKit
 import Foundation
+import JavaScriptCore
 import SwiftUI
 
 @main
@@ -1935,6 +1936,11 @@ struct ExtensionTests {
     /// sql.js loads through `WebAssembly.instantiate`, whose promise never settled on the JS queue.
     @MainActor
     static func webAssemblyChecks() async {
+        // JavaScriptCore only exposes WebAssembly from macOS 15; Sonoma skips the check.
+        guard JSContext()?.evaluateScript("typeof WebAssembly")?.toString() != "undefined" else {
+            print("SKIP  WebAssembly is unavailable in this JavaScriptCore")
+            return
+        }
         let (runtime, host, recorder) = makeRuntime()
         try? await runtime.boot(
             config: .current(supportDirectory: FileManager.default.temporaryDirectory))

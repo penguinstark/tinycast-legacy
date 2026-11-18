@@ -11,10 +11,10 @@ final class MCPOAuthListener {
     private var result: Result<String, Error>?
     private var accepted = false
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         task?.cancel()
         listener?.cancel()
-    }
+    }}
 
     func start(
         state: String, issuer: String, requiresIssuer: Bool, timeout: Duration = .seconds(300)

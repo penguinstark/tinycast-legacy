@@ -597,6 +597,6 @@ enum CalcTimeZone {
         relative.locale = calendar.locale ?? Locale(identifier: "en_US")
         relative.dateTimeStyle = .named
         relative.unitsStyle = .full
-        return " (\(relative.localizedString(for: from, relativeTo: to)))"
+        return " (\(relative.localizedString(for: to, relativeTo: from)))"
     }
 }

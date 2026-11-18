@@ -180,6 +180,7 @@ struct FormInputTests {
         expect(input.undoManager?.canUndo == false, "loading a draft creates no undo step")
         window.makeFirstResponder(input)
         input.insertText("Undo check", replacementRange: NSRange(location: 0, length: 0))
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.01))
         let previous = input.string
         draft.text = String(repeating: "A long line to wrap in the editor.\n", count: 40)
         RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.01))

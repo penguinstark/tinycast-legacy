@@ -3,7 +3,7 @@ import ImageIO
 import UniformTypeIdentifiers
 
 @main
-nonisolated enum ClipboardTextHelper {
+enum ClipboardTextHelper {
     static func main() async {
         if CommandLine.arguments.count == 5, CommandLine.arguments[1] == "thumbnail" {
             exit(writeThumbnail() ? 0 : 1)

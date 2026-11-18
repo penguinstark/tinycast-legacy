@@ -65,14 +65,27 @@ struct LanguageTests {
             Set(AppLanguage.allCases.map(\.title)).count == AppLanguage.allCases.count)
         check("an unknown raw value is rejected", AppLanguage(rawValue: "klingon") == nil)
 
-        do {
-            try checkCatalogs()
-        } catch {
-            check("catalogs compile and load", false, error.localizedDescription)
+        // macOS 14's Foundation crashes formatting a localized string from a standalone bundle.
+        if #available(macOS 26, *) {
+            do {
+                try checkCatalogs()
+            } catch {
+                check("catalogs compile and load", false, error.localizedDescription)
+            }
+        } else {
+            print("SKIP  runtime localization formatting needs macOS 26 Foundation")
         }
 
         print("\n\(passes) passed, \(failures) failed")
         exit(failures == 0 ? 0 : 1)
+    }
+
+    /// `/usr/bin/xcrun` cannot load Xcode 16.2's arm64 shim on this host, so call the tool directly.
+    private static var xcstringstool: URL {
+        let developer =
+            ProcessInfo.processInfo.environment["DEVELOPER_DIR"]
+            ?? "/Applications/Xcode.app/Contents/Developer"
+        return URL(fileURLWithPath: developer).appendingPathComponent("usr/bin/xcstringstool")
     }
 
     private static func checkCatalogs() throws {
@@ -82,9 +95,9 @@ struct LanguageTests {
         defer { try? FileManager.default.removeItem(at: root) }
         for catalog in ["Localizable", "InfoPlist"] {
             let process = Process()
-            process.executableURL = URL(fileURLWithPath: "/usr/bin/xcrun")
+            process.executableURL = Self.xcstringstool
             process.arguments = [
-                "xcstringstool", "compile", "Tinycast/Resources/\(catalog).xcstrings",
+                "compile", "Tinycast/Resources/\(catalog).xcstrings",
                 "--output-directory", root.path
             ]
             try process.run()

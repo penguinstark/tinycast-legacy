@@ -55,11 +55,11 @@ final class NotesStore {
         notesDirectory = repository.notesDirectory
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         saveDebounce?.cancel()
         searchTask?.cancel()
         searchWorker?.cancel()
-    }
+    }}
 
     func start() async -> Bool {
         if let saveTask { await saveTask.value }

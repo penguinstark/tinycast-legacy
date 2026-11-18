@@ -24,11 +24,11 @@ final class SecureInputMonitor {
     private let notifyProcs = NotifyProcs()
 
     // The callback holds this object unretained, so the registration must not outlive it.
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         guard let remove = notifyProcs?.remove else { return }
         let context = Unmanaged.passUnretained(self).toOpaque()
         for type in Self.notificationTypes { _ = remove(secureInputDidChange, type, context) }
-    }
+    }}
 
     /// Follows SkyLight's private Secure Input notifications; without them, nothing is reported.
     func start() {

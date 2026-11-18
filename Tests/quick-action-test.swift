@@ -100,7 +100,7 @@ struct QuickActionTests {
         let onDevice = QuickActionSettingsStore(defaults: defaults)
         onDevice.repairModel(against: [], fallback: nil)
         expect(
-            onDevice.model == nil,
+            onDevice.model == .codex(model: "gpt", effort: nil),
             "repair leaves a route that names no connection untouched")
 
         onDevice.select(.claude(model: "old", effort: nil))

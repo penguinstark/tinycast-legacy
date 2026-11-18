@@ -29,9 +29,9 @@ final class SettingsFileRepository {
         monitor = SettingsFileMonitor(fileURL: fileURL)
     }
 
-    isolated deinit {
+    deinit {MainActor.assumeIsolated {
         saveTask?.cancel()
-    }
+    }}
 
     /// Follows both sides from here on; `importing` applies the file first, else it is replaced.
     func start(importing: Bool) {
