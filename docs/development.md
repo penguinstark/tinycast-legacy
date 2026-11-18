@@ -143,6 +143,11 @@ already-running server does not re-read `.compile`.
 the repo root excludes the generated files and the two off-limits files in `DesignSystem/Scrolling/`.
 The comment policy in [standards.md](standards.md#comments) is deliberately not among its rules.
 
+Homebrew ships no SwiftLint bottle for macOS 14, so on Sonoma install the
+[portable release binary](https://github.com/realm/SwiftLint/releases) instead — 0.62.x is the last
+built against Swift 6.0. Run it with `XCODE_DEFAULT_TOOLCHAIN_OVERRIDE` pointing at the Xcode
+toolchain, or `xcode-select` at the Command Line Tools makes SourceKitten crash.
+
 `lint.sh` also runs `check-localizations.js`, which fails on a string missing from any language, a
 missing plural form, a stale entry, or a translation whose format specifiers differ from the source.
 
