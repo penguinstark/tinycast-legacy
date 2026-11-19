@@ -1,6 +1,6 @@
 <h1 align="center">
-  <a href="https://github.com/penguinstark/tinycast"><img src="docs/images/icon.png" alt="Tinycast Sonoma app icon" width="128" height="128"></a><br>
-  Tinycast Sonoma
+  <a href="https://github.com/penguinstark/tinycast-legacy"><img src="docs/images/icon.png" alt="Tinycast Legacy app icon" width="128" height="128"></a><br>
+  Tinycast Legacy
 </h1>
 
 <p align="center">
@@ -10,7 +10,7 @@
 <p align="center">
   <a href="#build"><strong>Build</strong></a> ·
   <a href="docs/README.md"><strong>Docs</strong></a> ·
-  <a href="https://github.com/penguinstark/tinycast"><strong>Source</strong></a>
+  <a href="https://github.com/penguinstark/tinycast-legacy"><strong>Source</strong></a>
 </p>
 
 <p align="center">
@@ -21,13 +21,13 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.jpg" alt="Tinycast Sonoma command palette">
+  <img src="docs/screenshot.jpg" alt="Tinycast Legacy command palette">
 </p>
 
 Built with SwiftUI and AppKit. No dependencies, no Electron, no telemetry. It runs your Raycast
 extensions, too.
 
-Tinycast Sonoma is a personal fork of [Tinycast](https://github.com/abue-ammar/tinycast) that targets
+Tinycast Legacy is a personal fork of [Tinycast](https://github.com/abue-ammar/tinycast) that targets
 macOS 14.4. It does not track the upstream app, and it has no website, Discord, funding page or
 release channel. The branch that builds on Xcode 16.2 is `xcode16-local`.
 
@@ -36,13 +36,13 @@ release channel. The branch that builds on Xcode 16.2 is `xcode16-local`.
 Requires macOS 14.4 or later and Xcode 16.2 with Swift 6.0.
 
 ```sh
-git clone https://github.com/penguinstark/tinycast.git
+git clone https://github.com/penguinstark/tinycast-legacy.git
 cd tinycast
 ./Scripts/local-signing.sh   # once: a stable self-signed identity for local builds
 open Tinycast.xcodeproj      # ⌘R
 ```
 
-The Debug build is its own channel: `Tinycast Sonoma Dev.app`, `com.tinycast.app.sonoma.dev`. It keeps
+The Debug build is its own channel: `Tinycast Legacy Dev.app`, `com.tinycast.app.legacy.dev`. It keeps
 its preferences, caches and permissions apart from the Release build.
 
 There is no published download and no Homebrew cask for this fork. Build it locally, and install the
@@ -52,5 +52,5 @@ More in [docs/development.md](docs/development.md) and [docs/testing.md](docs/te
 
 ## License
 
-Tinycast Sonoma is a fork of [Tinycast](https://github.com/abue-ammar/tinycast) by Md Abue Ammar,
+Tinycast Legacy is a fork of [Tinycast](https://github.com/abue-ammar/tinycast) by Md Abue Ammar,
 licensed under the [AGPL-3.0 license](LICENSE). Third-party notices are in [NOTICE.md](NOTICE.md).

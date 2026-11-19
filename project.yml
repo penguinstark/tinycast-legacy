@@ -17,18 +17,18 @@ settings:
     # A stable self-signed identity keeps the Accessibility grant across rebuilds. docs/signing.md
     CODE_SIGN_IDENTITY: "Tinycast Self-Signed"
     SWIFT_STRICT_CONCURRENCY: complete
-    TINYCAST_BUNDLE_IDENTIFIER: com.tinycast.app.sonoma
-    TINYCAST_URL_SCHEME: tinycast-sonoma
-    PRODUCT_NAME: Tinycast Sonoma
+    TINYCAST_BUNDLE_IDENTIFIER: com.tinycast.app.legacy
+    TINYCAST_URL_SCHEME: tinycast-legacy
+    PRODUCT_NAME: Tinycast Legacy
   configs:
     Debug:
-      TINYCAST_BUNDLE_IDENTIFIER: com.tinycast.app.sonoma.dev
+      TINYCAST_BUNDLE_IDENTIFIER: com.tinycast.app.legacy.dev
       # Its own scheme too, so a link never lands in whichever channel macOS happens to pick.
-      TINYCAST_URL_SCHEME: tinycast-sonoma-dev
-      DICTATION_EXECUTABLE_NAME: Tinycast Sonoma Dev Dictation
-      PRODUCT_NAME: Tinycast Sonoma Dev
+      TINYCAST_URL_SCHEME: tinycast-legacy-dev
+      DICTATION_EXECUTABLE_NAME: Tinycast Legacy Dev Dictation
+      PRODUCT_NAME: Tinycast Legacy Dev
     Release:
-      DICTATION_EXECUTABLE_NAME: Tinycast Sonoma Dictation
+      DICTATION_EXECUTABLE_NAME: Tinycast Legacy Dictation
       # Release-only: library validation refuses Debug's `.debug.dylib`, whose team never matches.
       ENABLE_HARDENED_RUNTIME: YES
       # Strip the shipped binary (dSYM is still generated first) and drop unused code.

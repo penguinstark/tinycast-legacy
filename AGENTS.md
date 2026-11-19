@@ -8,7 +8,7 @@ dependencies.
 
 ## Posture: macOS 14 floor
 
-**Tinycast Sonoma supports macOS 14.4 and later.** Swift 6+ with complete strict concurrency is
+**Tinycast Legacy supports macOS 14.4 and later.** Swift 6+ with complete strict concurrency is
 required. Prefer APIs available on macOS 14.4, and verify availability before adopting a newer one.
 
 Prefer current APIs and language features that the 14 floor allows:
@@ -133,7 +133,7 @@ feature's doc, under its own `## Invariants`.
   constant or type instead. Cap 100 characters, delete rather than update, and never comment a change
   you just made. Nothing lints this; get it right the first time.
   Full rules: [standards.md#comments](docs/standards.md#comments).
-- **Debug builds are their own channel** — `Tinycast Sonoma Dev.app` / `com.tinycast.app.sonoma.dev` —
+- **Debug builds are their own channel** — `Tinycast Legacy Dev.app` / `com.tinycast.app.legacy.dev` —
   so a local run never shares prefs, caches, TCC grants or the login item with an installed copy.
   Anything newly persisted must stay keyed by `Bundle.main.bundleIdentifier`.
 - **XcodeGen owns the project.** `Tinycast.xcodeproj` is committed but generated from `project.yml`;

@@ -274,7 +274,7 @@ frame and focus return.
 
 ```sh
 SDKROOT=… swiftc -swift-version 6 -parse-as-library Scripts/palette-smoke.swift -o /tmp/palette-smoke
-/tmp/palette-smoke ~/Applications/"Tinycast Sonoma Dev.app" tinycast-sonoma-dev
+/tmp/palette-smoke ~/Applications/"Tinycast Legacy Dev.app" tinycast-legacy-dev
 ```
 
 Run it against Debug and Release after touching the palette's show or hide path. It cannot see inside
@@ -431,7 +431,7 @@ There is no UI test suite, so this is it. Run the core sweep for any change that
 run the scoped section for whatever feature you touched. Budget about five minutes plus three per
 section.
 
-Run against the **Debug channel** (`Tinycast Sonoma Dev.app`, `com.tinycast.app.sonoma.dev`). It has its own prefs,
+Run against the **Debug channel** (`Tinycast Legacy Dev.app`, `com.tinycast.app.legacy.dev`). It has its own prefs,
 caches, TCC grants and login item, so this cannot disturb an installed copy.
 
 ### Core
@@ -572,7 +572,7 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
   input-source switching on, a short press switches sources only while Caps Lock is off
 - Right Command as Hyper with Left Command held keeps the chord; Left Shift as Hyper with Include
   Shift off sends ⌃⌥⇧⌘K when Right Shift is held with K
-- Run Tinycast Sonoma Dev next to Tinycast: the second reads Blocked and names the first; quitting the
+- Run Tinycast Legacy Dev next to Tinycast: the second reads Blocked and names the first; quitting the
   first hands the Hyper Key over without a relaunch
 - Revoke Accessibility while Hyper is live: the key goes back to normal. Grant it again: Hyper
   returns within a couple of seconds without a relaunch
@@ -911,11 +911,11 @@ caches, TCC grants and login item, so this cannot disturb an installed copy.
 
 ### Deeplinks
 
-Debug answers `tinycast-sonoma-dev://`; use that scheme for every link below.
+Debug answers `tinycast-legacy-dev://`; use that scheme for every link below.
 
 - ⇧⌘C on a command, window command, system action, quicklink and extension row says Deeplink
   copied; ⌘K lists Copy Deeplink there, and not on an application or a System Settings pane. A
-  built-in row's link starts `tinycast-sonoma-dev://`, and so does an extension row's
+  built-in row's link starts `tinycast-legacy-dev://`, and so does an extension row's
 - Type into a quicklink's and a custom command's argument fields, then ⇧⌘C: the link carries the
   values, and opening it fills the same fields
 - Right-click a shortcut field in Settings (a command, a quicklink, an extension command): Copy
@@ -958,9 +958,9 @@ Debug answers `tinycast-sonoma-dev://`; use that scheme for every link below.
   window to 800 pt by 60%; `"width":"0"` reports the link
 - `?arguments=nope` on any link: a HUD says it can't open it, and nothing runs
 - `settings/permissions` opens Settings on Permissions; `settings/nope` shows the HUD
-- A quicklink whose link is `tinycast-sonoma-dev://window-command/left-half` moves the window without
+- A quicklink whose link is `tinycast-legacy-dev://window-command/left-half` moves the window without
   asking. One whose link is another quicklink's says it can't, and nothing loops
-- `raycast://extensions/<owner>/<ext>/<cmd>` and `tinycast-sonoma-dev://extensions/<owner>/<ext>/<cmd>`
+- `raycast://extensions/<owner>/<ext>/<cmd>` and `tinycast-legacy-dev://extensions/<owner>/<ext>/<cmd>`
   still run an installed extension command; `?context=` with a JSON object reaches it as
   `props.launchContext`
 
@@ -990,7 +990,7 @@ Debug answers `tinycast-sonoma-dev://`; use that scheme for every link below.
 - Untick a category on **import** and confirm it did not arrive, while the ticked ones did
 - An image clip round-trips and still renders; the archive can then be deleted without breaking it
 - A file whose `manifest.json` `format` was hand-edited is refused **with a message naming it**
-- Cancelling the save panel leaves nothing in `~/Library/Caches/com.tinycast.app.sonoma.dev/backup-staging/`
+- Cancelling the save panel leaves nothing in `~/Library/Caches/com.tinycast.app.legacy.dev/backup-staging/`
 - **`snippetsEnabled` is not in the exported file**, and importing does not enable snippets
 - Nothing in the extracted tree names a Keychain item, an extension, or an AI conversation
 
@@ -1000,11 +1000,11 @@ The realistic storage failure is a store that crashes on an absent file rather t
 Wipe the Dev channel and check that path directly:
 
 ```sh
-rm -rf ~/Library/Caches/com.tinycast.app.sonoma.dev
-rm -rf "$HOME/Library/Application Support/com.tinycast.app.sonoma.dev"
-rm -rf ~/.config/tinycast-sonoma-dev
-defaults delete com.tinycast.app.sonoma.dev 2>/dev/null || true
-tccutil reset Accessibility com.tinycast.app.sonoma.dev 2>/dev/null || true
+rm -rf ~/Library/Caches/com.tinycast.app.legacy.dev
+rm -rf "$HOME/Library/Application Support/com.tinycast.app.legacy.dev"
+rm -rf ~/.config/tinycast-legacy-dev
+defaults delete com.tinycast.app.legacy.dev 2>/dev/null || true
+tccutil reset Accessibility com.tinycast.app.legacy.dev 2>/dev/null || true
 ```
 
 - Launches with every store directory absent — no crash, no hang; onboarding runs
@@ -1018,5 +1018,5 @@ tccutil reset Accessibility com.tinycast.app.sonoma.dev 2>/dev/null || true
 - **Every setting shows its intended default.** Walk the panes: this is what catches a broken
   absence-versus-`false` read
 - Quit and relaunch: everything created above persisted
-- Nothing was written outside `com.tinycast.app.sonoma.dev/`. Channel isolation is not negotiable — a Dev build
+- Nothing was written outside `com.tinycast.app.legacy.dev/`. Channel isolation is not negotiable — a Dev build
   writing into the stable app's directory is a defect even though the data is disposable

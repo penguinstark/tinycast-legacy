@@ -4,7 +4,7 @@ import CoreGraphics
 // Exercises the palette summon path against a built app, using only window metadata and the URL
 // scheme — no Accessibility or Screen Recording grant. It quits any running copy first.
 //   swiftc -swift-version 6 Scripts/palette-smoke.swift -o /tmp/palette-smoke
-//   /tmp/palette-smoke ~/Applications/"Tinycast Sonoma Dev.app" tinycast-sonoma-dev
+//   /tmp/palette-smoke ~/Applications/"Tinycast Legacy Dev.app" tinycast-legacy-dev
 
 @MainActor var failures = 0
 

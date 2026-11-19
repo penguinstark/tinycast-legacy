@@ -141732,54 +141732,54 @@
         }
       }
     },
-    "© 2026 Abue Ammar · Tinycast Sonoma is released under AGPL-3.0" : {
+    "© 2026 Abue Ammar · Tinycast Legacy is released under AGPL-3.0" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma wird unter AGPL-3.0 veröffentlicht"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy wird unter AGPL-3.0 veröffentlicht"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma se publica bajo AGPL-3.0"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy se publica bajo AGPL-3.0"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma est publié sous AGPL-3.0"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy est publié sous AGPL-3.0"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma は AGPL-3.0 で公開されています"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy は AGPL-3.0 で公開されています"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma는 AGPL-3.0으로 배포됩니다"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy는 AGPL-3.0으로 배포됩니다"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma é publicado sob AGPL-3.0"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy é publicado sob AGPL-3.0"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma выпускается под лицензией AGPL-3.0"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy выпускается под лицензией AGPL-3.0"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "© 2026 Abue Ammar · Tinycast Sonoma 基于 AGPL-3.0 发布"
+            "value" : "© 2026 Abue Ammar · Tinycast Legacy 基于 AGPL-3.0 发布"
           }
         }
       }

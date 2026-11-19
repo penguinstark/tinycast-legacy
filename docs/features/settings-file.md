@@ -1,7 +1,7 @@
 # Settings file
 
 An opt-in mirror of Tinycast's preferences, the launcher's items and all of window management in
-`~/.config/tinycast-sonoma/settings.json`, switched on in **Settings → Backup → Settings File**. `UserDefaults`
+`~/.config/tinycast-legacy/settings.json`, switched on in **Settings → Backup → Settings File**. `UserDefaults`
 stays the store; the file follows it, and an edit made to the file applies at once. The machinery lives
 in `Features/Settings/` (`Model/`, `Service/`, `SettingsFileSchema.swift`), the launcher's part in
 `Features/Launcher/`, and window management's in `Features/WindowManagement/`.
@@ -61,8 +61,8 @@ value. `[]` removes every shortcut, and omitting the key leaves the current sele
 
 ## Location
 
-`~/.config/tinycast-sonoma/settings.json` in Release; Debug uses
-`~/.config/tinycast-sonoma-dev`. `$XDG_CONFIG_HOME` is not read, because an app opened from
+`~/.config/tinycast-legacy/settings.json` in Release; Debug uses
+`~/.config/tinycast-legacy-dev`. `$XDG_CONFIG_HOME` is not read, because an app opened from
 Finder never sees the shell's environment. A symlink is followed and kept: the write lands in its
 target, so a file linked from a dotfiles repository stays linked.
 

@@ -46,21 +46,21 @@ The app target builds and embeds `ClipboardTextHelper` under `Contents/Helpers`,
 Build the app scheme to include it; copying only the main executable omits OCR support. The helper's
 executable name stays fixed even when release builds override the app's product name for a channel.
 
-Dictation similarly embeds its Swift/Core ML helper, named `Tinycast Sonoma Dev Dictation` in Debug
-and `Tinycast Sonoma Dictation` in Release, in an accessory `.app` bundle without a bundled icon. Model weights
+Dictation similarly embeds its Swift/Core ML helper, named `Tinycast Legacy Dev Dictation` in Debug
+and `Tinycast Legacy Dictation` in Release, in an accessory `.app` bundle without a bundled icon. Model weights
 download on demand; none are app resources.
 
 ### The dev channel
 
-Debug builds are a separate channel: **`Tinycast Sonoma Dev.app`**, bundle id
-`com.tinycast.app.sonoma.dev`. Every
+Debug builds are a separate channel: **`Tinycast Legacy Dev.app`**, bundle id
+`com.tinycast.app.legacy.dev`. Every
 persisted thing is keyed by bundle id — `~/Library/Preferences/<id>.plist` (settings and hotkey
 bindings), `~/Library/Application Support/<id>/` (the onboarding marker, Notes, snippets, quicklinks,
 clipboard history, calculator history, launch ranking and frequent emoji; Notes and snippets unless
 a folder is chosen),
 `~/Library/Caches/<id>/` (exchange rates), the opt-in
-`~/.config/tinycast-sonoma-dev/settings.json` (`tinycast-sonoma` on release), the
-`tinycast-sonoma-dev://` link scheme (`tinycast-sonoma://` on release), the `SMAppService`
+`~/.config/tinycast-legacy-dev/settings.json` (`tinycast-legacy` on release), the
+`tinycast-legacy-dev://` link scheme (`tinycast-legacy://` on release), the `SMAppService`
 login item, and the Accessibility / Input Monitoring (TCC) grants — so a local build can neither read
 nor clobber an installed app's state, and both run side by side.
 
@@ -96,7 +96,7 @@ xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Debug \
 
 Both files are git-ignored because they embed absolute paths, and `sourcekit-lsp` looks for
 `buildServer.json` at the workspace root by name, so it cannot live in a subfolder. After this the
-**Build Tinycast Sonoma.app (debug)** task (⌘⇧B) and **F5** re-run the script on every build, so new and
+**Build Tinycast Legacy.app (debug)** task (⌘⇧B) and **F5** re-run the script on every build, so new and
 renamed files keep resolving.
 
 **Do not run `xcode-build-server config`.** It writes `kind: xcode`, and in that mode the server ignores

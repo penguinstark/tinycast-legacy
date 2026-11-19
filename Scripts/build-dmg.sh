@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build a signed Tinycast Sonoma.app into build/Tinycast-Sonoma-<version>.dmg. Usage: build-dmg.sh [version]
+# Build a signed Tinycast Legacy.app into build/Tinycast-Legacy-<version>.dmg. Usage: build-dmg.sh [version]
 set -euo pipefail
 
 cd "$(dirname "$0")/.." || exit 1
@@ -12,16 +12,16 @@ if ! security find-identity -p codesigning | grep -q "$IDENTITY"; then
     exit 1
 fi
 
-echo "▸ Building signed Tinycast Sonoma.app (Release)…"
+echo "▸ Building signed Tinycast Legacy.app (Release)…"
 xcodebuild -project Tinycast.xcodeproj -scheme Tinycast -configuration Release \
     -derivedDataPath "$DERIVED" \
     CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="$IDENTITY" OTHER_CODE_SIGN_FLAGS="--timestamp=none" \
     ${1:+MARKETING_VERSION="$1"} \
     build
 
-APP="$DERIVED/Build/Products/Release/Tinycast Sonoma.app"
+APP="$DERIVED/Build/Products/Release/Tinycast Legacy.app"
 VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")"
-DMG="build/Tinycast-Sonoma-${VERSION}.dmg"
+DMG="build/Tinycast-Legacy-${VERSION}.dmg"
 
 echo "▸ Packaging ${DMG}"
 STAGE="$(mktemp -d)"

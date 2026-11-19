@@ -112,7 +112,7 @@ struct SnippetRepository: Sendable {
     private let mutationHooks: MutationHooks
 
     init(
-        bundleIdentifier: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma",
+        bundleIdentifier: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy",
         applicationSupportRoot: URL = FileManager.default.urls(
             for: .applicationSupportDirectory,
             in: .userDomainMask
