@@ -11,8 +11,29 @@ Tinycast has two signing identities:
 
 ## 1. Create the `Tinycast Self-Signed` identity (once)
 
-Run these in a terminal. They generate a self-signed code-signing certificate and import it into your
-login keychain:
+```sh
+./Scripts/local-signing.sh
+```
+
+It generates a self-signed code-signing certificate and key, imports them into a keychain of their
+own (`~/Library/Keychains/tinycast-signing.keychain-db`, password `tinycast`), authorises `codesign`
+for it, and adds that keychain to the user's search list. Its own keychain is what lets `codesign`
+use the key without a GUI approval prompt, so headless `xcodebuild` works; the password is public and
+protects nothing but a certificate anyone can recreate. The keychain locks on sleep — unlock it with
+`security unlock-keychain -p tinycast ~/Library/Keychains/tinycast-signing.keychain-db` if a build
+reports `errSecInternalComponent`.
+
+Verify it's there:
+
+```sh
+security find-identity -p codesigning | grep "Tinycast Self-Signed"
+```
+
+Now local builds (Xcode, VS Code F5, `xcodebuild`) sign with it, and you grant Accessibility once.
+Re-running the script is a no-op that only unlocks the keychain.
+
+<details>
+<summary>Doing it by hand</summary>
 
 ```sh
 # Generate a self-signed code-signing cert (10-year, codeSigning use).
@@ -23,24 +44,22 @@ openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
   -addext "keyUsage=critical,digitalSignature" \
   -addext "extendedKeyUsage=critical,codeSigning"
 
-# Bundle it as a .p12 (the non-empty password keeps `security import` happy).
-openssl pkcs12 -export -inkey /tmp/tc-key.pem -in /tmp/tc-cert.pem \
+# Bundle it as a .p12 (the non-empty password keeps `security import` happy). Add `-legacy` when
+# `openssl` is Homebrew's OpenSSL 3 or later; macOS's `security import` rejects its default ciphers.
+openssl pkcs12 -export -legacy -inkey /tmp/tc-key.pem -in /tmp/tc-cert.pem \
   -name "Tinycast Self-Signed" -out /tmp/tc.p12 -passout pass:tinycast
 
-# Import into the login keychain so codesign can use it without prompting.
 security import /tmp/tc.p12 -k ~/Library/Keychains/login.keychain-db \
   -P tinycast -A -T /usr/bin/codesign
 
 rm -f /tmp/tc-key.pem /tmp/tc-cert.pem /tmp/tc.p12
 ```
 
-Verify it's there:
+The login keychain works from Xcode but needs a keychain password for `set-key-partition-list`
+before a headless `codesign` can use the key; the script's separate keychain avoids that.
 
-```sh
-security find-identity -p codesigning | grep "Tinycast Self-Signed"
-```
+</details>
 
-Now local builds (Xcode, VS Code F5, `xcodebuild`) sign with it, and you grant Accessibility once.
 
 ## 2. The release secrets
 

@@ -265,6 +265,22 @@ search result that navigates and then sits there.
 Last, `Scripts/check-migrations.sh` fails once a stable release has shipped a migration, which is the
 cue to delete it. See [migrations.md](migrations.md).
 
+## Palette smoke probe
+
+`Scripts/palette-smoke.swift` drives the palette through its URL scheme against a built app, reading
+only window metadata, so it needs no Accessibility or Screen Recording grant. It quits any running
+copy, launches the app in the background (the login-item path), and checks that prewarming leaves no
+window visible and no focus moved, then ten hidden→shown summons for appearance, opacity, a stable
+frame and focus return.
+
+```sh
+SDKROOT=… swiftc -swift-version 6 -parse-as-library Scripts/palette-smoke.swift -o /tmp/palette-smoke
+/tmp/palette-smoke ~/Applications/"Tinycast Sonoma Dev.app" tinycast-sonoma-dev
+```
+
+Run it against Debug and Release after touching the palette's show or hide path. It cannot see inside
+the palette, so content, IME and permission-dependent behaviour stay in the manual sweep.
+
 ## Performance measurement
 
 `Platform/Signposts.swift` emits eight intervals on the `com.tinycast.perf` subsystem: `AppCore.start`,
