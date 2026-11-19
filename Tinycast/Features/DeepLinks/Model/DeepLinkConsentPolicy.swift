@@ -53,7 +53,7 @@ enum DeepLinkConsentPolicy {
             .searchCustomCommands, .define, .mySchedule, .createEvent, .showNotes, .createNote,
             .searchNotes, .createWindowLayout, .switchRoom, .createRoom, .createQuicklink,
             .searchQuicklinks, .importQuicklinks, .exportQuicklinks, .searchSnippets, .createSnippet,
-            .exportSettings, .importSettings, .importFromRaycast, .settings, .about, .support:
+            .exportSettings, .importSettings, .importFromRaycast, .settings, .about:
             false
         }
     }

@@ -24,7 +24,6 @@ struct MenuBarMenu: View {
             }
         }
         Divider()
-        Button("Support \(appName)…") { AppCore.shared.supportCoordinator.showSupport() }
         Button("Settings…") { AppCore.shared.settingsCoordinator.showSettings() }
             .keyboardShortcut(",")
         Divider()

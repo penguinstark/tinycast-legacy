@@ -95,8 +95,6 @@ struct SettingsBackup: Codable {
         var menuBarLinkedEventsOnly: Bool?
         var calendarMenuBarHidesWhenEmpty: Bool?
         var hideCurrentEvent: Int?
-        // Safe to carry: it silences a prompt rather than granting anything.
-        var supportReminders: Bool?
     }
 
     struct HotkeyBackup: Codable {
@@ -203,8 +201,7 @@ extension SettingsBackup {
             calendarMenuBarDisplay: s.calendarMenuBarDisplay.rawValue,
             menuBarLinkedEventsOnly: s.menuBarLinkedEventsOnly,
             calendarMenuBarHidesWhenEmpty: s.calendarMenuBarHidesWhenEmpty,
-            hideCurrentEvent: s.hideCurrentEvent.rawValue,
-            supportReminders: s.supportRemindersEnabled)
+            hideCurrentEvent: s.hideCurrentEvent.rawValue)
 
         let hk = core.hotKeys
         var hotkeys = HotkeyBackup()
@@ -584,10 +581,6 @@ extension SettingsBackup {
         }
         if let raw = s.hideCurrentEvent, let hide = HideCurrentEvent(rawValue: raw) {
             settings.hideCurrentEvent = hide
-            count += 1
-        }
-        if let flag = s.supportReminders {
-            settings.supportRemindersEnabled = flag
             count += 1
         }
         return count

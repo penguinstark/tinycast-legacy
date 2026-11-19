@@ -12,8 +12,8 @@ contradicts the code is a defect, so fix it in the commit that made it wrong.
 | [standards.md](standards.md)       | How code here is written: posture, naming, style, concurrency, performance budgets, comments            | a convention changes, or a check is added       |
 | [testing.md](testing.md)           | How to verify a change: the definition of done, the harnesses, purity checks, budgets, the manual sweep | a harness moves, or a budget changes            |
 | [development.md](development.md)   | The local loop: setup, build, dev channel, editor, format/lint, generated data                          | the local toolchain changes                     |
-| [release.md](release.md)           | How a build reaches a user: packaging, PR review, releases, the Homebrew casks                          | the pipeline changes                            |
-| [signing.md](signing.md)           | The local self-signed identity, the release Developer ID and notary secrets                             | the signing setup changes                       |
+| [release.md](release.md)           | How a local build becomes a DMG: packaging, signing checks, distribution                                | the pipeline changes                            |
+| [signing.md](signing.md)           | The local self-signed identity, the Developer ID and the notary environment                             | the signing setup changes                       |
 | [ui.md](ui.md)                     | The design system: tokens, panel chrome, row grammar, frost, dialogs and HUDs                           | a token or a presentation rule changes          |
 
 ## Features
@@ -49,10 +49,9 @@ open with an `## Invariants` section; read it before changing anything in that a
 [backup](features/backup.md) ·
 [settings file](features/settings-file.md) ·
 [Raycast import](features/raycast-import.md) ·
-[Raycast extensions](features/extensions.md) ·
-[support](features/support.md)
+[Raycast extensions](features/extensions.md)
 
 ## Contributing
 
-[`CONTRIBUTING.md`](../CONTRIBUTING.md) covers the workflow — what to open, what to test, what a PR needs.
+[`CONTRIBUTING.md`](../CONTRIBUTING.md) covers setup and the bar a change has to clear.
 [`SECURITY.md`](../SECURITY.md) covers vulnerability reports.

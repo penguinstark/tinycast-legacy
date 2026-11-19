@@ -3,8 +3,8 @@
 How a build reaches a user. The local development loop is in [development.md](development.md);
 the signing identity itself is in [signing.md](signing.md).
 
-Tinycast Sonoma is a frozen macOS 14 edition. There is one channel, no beta, and **no in-app
-updater** — updates are Homebrew-only, through `brew upgrade --cask tinycast-sonoma`.
+Tinycast Sonoma is a personal macOS 14 fork. There is no released channel, no beta and **no in-app
+updater**; you build and install the copy you want.
 
 ## Packaging a DMG locally
 
@@ -21,15 +21,11 @@ It builds a Release `Tinycast Sonoma.app` signed with `Tinycast Self-Signed` and
 A distributed build is signed with a Developer ID, notarized and stapled, so a downloaded DMG opens
 without a Gatekeeper warning. Full details in [signing.md](signing.md).
 
-## How users get a release
+## How a build reaches a machine
 
-Every release publishes a `Tinycast-Sonoma-<version>.dmg`, which people install by hand or through
-the `tinycast-sonoma` cask. A `Tinycast-Sonoma-<version>.zip` may travel alongside it; the zip is
-produced with `ditto -c -k --keepParent --sequesterRsrc`, the only zip that leaves the code signature
-verifiable.
-
-The cask declares `auto_updates false` (or omits the flag), so Homebrew compares the installed
-version against the cask and upgrades it normally.
+There is no published release or cask. `Scripts/build-dmg.sh` produces a DMG for the Mac that built
+it; a Developer ID build from `Scripts/package-release.sh` is the one that opens on another Mac
+without a Gatekeeper warning.
 
 ## Pull request review
 
@@ -39,8 +35,8 @@ There is no CI workflow and no automated reviewer, so the whole bar in
 ## Releasing
 
 There is no release workflow in this fork. Build with `Scripts/build-dmg.sh` on a Mac with the
-signing identity, run `Scripts/verify-signature.sh` against the finished app, and publish the DMG
-by hand. `Scripts/package-release.sh` notarizes and staples when the notary credentials are in the
+signing identity, run `Scripts/verify-signature.sh` against the finished app, and distribute the DMG
+however you like. `Scripts/package-release.sh` notarizes and staples when the notary credentials are in the
 environment.
 
 `Scripts/check-migrations.sh` is worth running first: a migration that a release already shipped

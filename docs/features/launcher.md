@@ -183,7 +183,7 @@ the Zed app: rule 3 only protects an exact title past three characters.
 
 `settings` is the case these were measured against. Apple declares `Settings` in System Settings'
 `CFBundleAlternateNames`, so it is an exact alternate title and wins rule 3; the command is named
-`Tinycast Settings`, like About, Quit and Support Tinycast, so nothing ties it there.
+`Tinycast Settings`, like About and Quit, so nothing ties it there.
 
 ## One fold, everywhere
 
@@ -675,7 +675,7 @@ id is what keeps "which pane owns this" out of the entry-ID namespace.
 Eleven panes own commands today — AI, Quick Actions, File Search, Notes, Snippets, Navigation,
 Window Management, Clipboard, Emoji, Calendar and Quicklinks. What is left in Settings › Commands is
 the set no feature switch governs: Calculator History, Open Camera, the three backup commands, Check
-for Updates, Tinycast Settings, About, Support and Quit.
+for Updates, Tinycast Settings, About and Quit.
 
 A pane's list is also its display order, so `CommandID`'s declaration order is grouped by owner.
 Nothing keys on that order — `CommandCatalog.all` sorts by name and every preference keys on the raw

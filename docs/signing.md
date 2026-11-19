@@ -61,38 +61,27 @@ before a headless `codesign` can use the key; the script's separate keychain avo
 </details>
 
 
-## 2. The release secrets
+## 2. Publishing a build
 
-A fork with no release workflow keeps these in the environment of whoever builds the DMG: the same
-five values `Scripts/package-release.sh` reads.
+This fork has no release workflow, so `Scripts/package-release.sh` reads its five values from the
+environment of whoever runs it:
 
-| Secret                              | Holds                                                               |
-| ----------------------------------- | ------------------------------------------------------------------- |
-| `DEVELOPER_ID_P12_BASE64`           | the Developer ID Application certificate and its private key, base64 `.p12` |
-| `DEVELOPER_ID_P12_PASSWORD`         | the password the `.p12` was exported with                           |
-| `NOTARY_KEY_P8_BASE64`              | an App Store Connect API team key (`.p8`) with Developer access, base64 |
-| `NOTARY_KEY_ID`, `NOTARY_ISSUER_ID` | that key's ID and its issuer ID                                     |
+| Variable                    | Holds                                                         |
+| --------------------------- | ------------------------------------------------------------- |
+| `DEVELOPER_ID_P12_BASE64`   | the Developer ID Application certificate and key, base64 `.p12` |
+| `DEVELOPER_ID_P12_PASSWORD` | the password the `.p12` was exported with                     |
+| `NOTARY_KEY_P8_BASE64`      | an App Store Connect API key (`.p8`) with Developer access, base64 |
+| `NOTARY_KEY_ID`             | that key's ID                                                 |
+| `NOTARY_ISSUER_ID`          | its issuer ID                                                 |
 
 Export the Developer ID identity alone — `security export -t identities` bundles every identity in
-the keychain. In Keychain Access, open **My Certificates**, select
-`Developer ID Application: … (J656U8XZ93)`, choose **File → Export Items…** and save a `.p12` with a
-password. Then:
+the keychain. In Keychain Access, open **My Certificates**, select the **Developer ID Application**
+certificate, choose **File → Export Items…**, and save a `.p12` with a password. Then export each
+value into the shell that runs the script; never put the password or private key in a command
+argument that history would keep.
 
-```sh
-base64 -i DeveloperID.p12 | gh secret set DEVELOPER_ID_P12_BASE64 --env release --repo penguinstark/tinycast-sonoma
-gh secret set DEVELOPER_ID_P12_PASSWORD --env release --repo penguinstark/tinycast-sonoma
-base64 -i AuthKey_<key-id>.p8 | gh secret set NOTARY_KEY_P8_BASE64 --env release --repo penguinstark/tinycast-sonoma
-gh secret set NOTARY_KEY_ID --env release --repo penguinstark/tinycast-sonoma --body "<key-id>"
-gh secret set NOTARY_ISSUER_ID --env release --repo penguinstark/tinycast-sonoma --body "<issuer-id>"
-```
-
-The password and the private key go in at `gh`'s prompt, never through `--body`, which would leave
-them in your shell history.
-
-**Renew the certificate yearly.** Apple issues a Developer ID certificate for about 13 months.
-Before it expires, the account holder creates a new one on developer.apple.com (**Developer ID
-Application**, **G2 Sub-CA**) and replaces the two `DEVELOPER_ID_P12_*` secrets. Nothing else
-changes: a shipped build stays valid because its signature carries Apple's timestamp, and macOS
+**Renew the certificate yearly.** Apple issues a Developer ID certificate for about 13 months. A
+shipped build stays valid after renewal because its signature carries Apple's timestamp, and macOS
 matches the team rather than the certificate. The API key does not expire.
 
 ## Hardened runtime
@@ -133,7 +122,8 @@ rejection, and a usage string missing its entitlement ships a permission that ca
 
 ## Update trust
 
-There is no in-app updater, so releases trust nothing at runtime: updates ship through Homebrew.
+There is no in-app updater and no released channel in this fork: whatever you build next is the
+update.
 
 ## Developer ID stays out of the project
 
