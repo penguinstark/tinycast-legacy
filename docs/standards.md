@@ -10,7 +10,7 @@ When this document and the code disagree, the code is probably right and this fi
 
 ## Posture
 
-Tinycast Sonoma supports macOS 14.4 and later. Swift 6+ with complete strict concurrency is required.
+Tinycast Legacy supports macOS 14.4 and later. Swift 6+ with complete strict concurrency is required.
 Prefer the newest Swift patterns and Apple APIs that the 14 floor still has, following
 [`AGENTS.md`](../AGENTS.md#posture-macos-14-floor).
 

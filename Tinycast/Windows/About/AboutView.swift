@@ -83,7 +83,7 @@ struct AboutView: View {
     }
 
     private var footer: some View {
-        Text("© 2026 Abue Ammar · Tinycast Sonoma is released under AGPL-3.0")
+        Text("© 2026 Abue Ammar · Tinycast Legacy is released under AGPL-3.0")
             .font(.caption2)
             .foregroundStyle(.tertiary)
     }
@@ -105,12 +105,12 @@ private struct AboutLink: Identifiable {
     static let all: [AboutLink] = [
         AboutLink(
             id: "github", glyph: .brand("BrandGitHub"), title: "GitHub",
-            detail: "github.com/penguinstark/tinycast",
-            url: URL(string: "https://github.com/penguinstark/tinycast")!),
+            detail: "github.com/penguinstark/tinycast-legacy",
+            url: URL(string: "https://github.com/penguinstark/tinycast-legacy")!),
         AboutLink(
             id: "license", glyph: .symbol("doc.text"), title: String(localized: "License"),
             detail: String(localized: "GNU AGPL-3.0"),
-            url: URL(string: "https://github.com/penguinstark/tinycast/blob/xcode16-local/LICENSE")!)
+            url: URL(string: "https://github.com/penguinstark/tinycast-legacy-legacy/blob/main/LICENSE")!)
     ]
 }
 

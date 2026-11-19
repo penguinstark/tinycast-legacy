@@ -3,20 +3,20 @@ import Foundation
 /// The per-channel storage roots. Keyed by bundle id so a Dev build never shares a stable's dirs.
 enum AppPaths {
     static func caches(
-        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma"
+        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy"
     ) -> URL {
         root(.cachesDirectory, bundleID: bundleID)
     }
 
     static func applicationSupport(
-        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma"
+        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy"
     ) -> URL {
         root(.applicationSupportDirectory, bundleID: bundleID)
     }
 
-    /// `~/.config/tinycast-sonoma/settings.json`; another channel suffixes the folder, as `tinycast-sonoma-dev`.
+    /// `~/.config/tinycast-legacy/settings.json`; another channel suffixes the folder, as `tinycast-legacy-dev`.
     static func settingsFile(
-        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma"
+        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy"
     ) -> URL {
         FileManager.default.homeDirectoryForCurrentUser
             .appending(path: ".config", directoryHint: .isDirectory)
@@ -27,7 +27,7 @@ enum AppPaths {
     /// Snippets or Notes: the folder the user chose, else its home in Application Support.
     static func contentFolder(
         _ chosen: String?, named name: String,
-        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma"
+        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy"
     ) -> URL {
         guard let chosen, isFolderPath(chosen) else {
             return applicationSupport(bundleID: bundleID).appending(path: name, directoryHint: .isDirectory)
@@ -40,7 +40,7 @@ enum AppPaths {
     /// How a chosen folder is stored: nil for the default, else `~`-relative where it can be.
     static func contentFolderSetting(
         for url: URL, named name: String,
-        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.sonoma"
+        bundleID: String = Bundle.main.bundleIdentifier ?? "com.tinycast.app.legacy"
     ) -> String? {
         let chosen = url.standardizedFileURL.resolvingSymlinksInPath()
         let standard = contentFolder(nil, named: name, bundleID: bundleID).resolvingSymlinksInPath()

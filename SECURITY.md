@@ -3,9 +3,9 @@
 ## Reporting a Vulnerability
 
 Report privately through GitHub: **Security** tab → **Report a vulnerability** on
-[penguinstark/tinycast](https://github.com/penguinstark/tinycast).
+[penguinstark/tinycast-legacy](https://github.com/penguinstark/tinycast-legacy).
 
-Include your macOS version, the Tinycast Sonoma version and channel, reproduction steps, and the
+Include your macOS version, the Tinycast Legacy version and channel, reproduction steps, and the
 impact. Please don't disclose publicly until it's fixed.
 
 ## Supported Versions

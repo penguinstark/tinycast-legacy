@@ -3,17 +3,17 @@
 How a build reaches a user. The local development loop is in [development.md](development.md);
 the signing identity itself is in [signing.md](signing.md).
 
-Tinycast Sonoma is a personal macOS 14 fork. There is no released channel, no beta and **no in-app
+Tinycast Legacy is a personal macOS 14 fork. There is no released channel, no beta and **no in-app
 updater**; you build and install the copy you want.
 
 ## Packaging a DMG locally
 
 ```sh
-./Scripts/build-dmg.sh            # -> build/Tinycast-Sonoma-<version>.dmg
-./Scripts/build-dmg.sh 0.5.7      # -> build/Tinycast-Sonoma-0.5.7.dmg
+./Scripts/build-dmg.sh            # -> build/Tinycast-Legacy-<version>.dmg
+./Scripts/build-dmg.sh 0.5.7      # -> build/Tinycast-Legacy-0.5.7.dmg
 ```
 
-It builds a Release `Tinycast Sonoma.app` signed with `Tinycast Self-Signed` and packs it with an
+It builds a Release `Tinycast Legacy.app` signed with `Tinycast Self-Signed` and packs it with an
 `/Applications` symlink. Local builds are never notarized.
 
 ## Signing & Gatekeeper
