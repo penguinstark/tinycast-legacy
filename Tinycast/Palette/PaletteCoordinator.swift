@@ -54,6 +54,11 @@ final class PaletteCoordinator {
         windowController.isVisible && palette.mode == mode
     }
 
+    /// Builds the palette before anyone asks for it, so the first summon is not the slow one.
+    func prewarm() {
+        windowController.prewarm()
+    }
+
     func togglePalette() {
         if isShowing(.launcher) {
             hidePalette()

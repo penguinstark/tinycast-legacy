@@ -348,6 +348,11 @@ final class AppCore {
                 }
             }
             calendarCoordinator.applyEnabled()
+            // Build and paint the palette while idle, so the first summon is not the slow one.
+            Task { [weak self] in
+                try? await Task.sleep(for: .seconds(1))
+                self?.paletteCoordinator.prewarm()
+            }
             Task { await appIndex.refresh() }
             Task { await emojiIndex.load(languages: SystemLanguages.preferred) }
             currencyRates.start()
