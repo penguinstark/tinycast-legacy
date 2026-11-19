@@ -16,8 +16,8 @@ verifying a change is [testing.md](testing.md).
 ## First-time setup
 
 Create the `Tinycast Self-Signed` code-signing identity once — builds sign with it, which is what keeps
-macOS from forgetting the Accessibility grant on every rebuild. Follow **[signing.md](signing.md) §1**,
-a few `openssl`/`security` commands.
+macOS from forgetting the Accessibility grant on every rebuild. Run `./Scripts/local-signing.sh`, or
+follow **[signing.md](signing.md) §1** to do it by hand.
 
 That is the whole required setup. Editor configuration is personal and the repo does not prescribe it;
 the section below is a note for anyone who wants it, not a step.
