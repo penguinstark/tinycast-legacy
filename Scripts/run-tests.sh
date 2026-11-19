@@ -803,7 +803,6 @@ run settings-history-test  Tinycast/Features/Settings/SettingsTab.swift \
                            Tinycast/Features/Settings/SettingsSearchCatalog.swift \
                            $L/SearchRelevance.swift \
                            Tinycast/Platform/LocalizedResource.swift
-run support-test           Tinycast/Features/Support/Model/*.swift
 run ai-provider-test       Tinycast/Features/Settings/AppSettingsKey.swift \
                            Tinycast/Features/AI/Model/*.swift \
                            Tinycast/Features/AI/Settings/AISettingsStore.swift \

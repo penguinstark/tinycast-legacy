@@ -843,8 +843,9 @@ The fetch runs on a private **cacheless** `URLSession` (`.ephemeral`, `urlCache 
 `Cache-Control: public, max-age=…`, so the shared session would keep a second copy in the on-disk
 `URLCache` that deleting the snapshot doesn't touch.
 
-Both feeds are served by the upstream Worker at `tinycast.dev/api/v1/currencies`, which reshapes the
+Both feeds are served by the rate service at `tinycast.dev/api/v1/currencies`, which reshapes the
 CC0 [exchange-api](https://github.com/fawazahmed0/exchange-api) daily snapshot and edge-caches it.
+This is the one network dependency the fork keeps from upstream.
 
 Rates come from `CurrencyRateStore` (`Calculator/Service/`, owned by `AppCore`), which issues two
 requests concurrently: the fiat table, keyed `<base><code>` with the base's own row omitted, and the

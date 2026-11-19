@@ -1,16 +1,16 @@
 <h1 align="center">
-  <a href="https://github.com/penguinstark/tinycast-sonoma"><img src="docs/images/icon.png" alt="Tinycast app icon" width="128" height="128"></a><br>
+  <a href="https://github.com/penguinstark/tinycast"><img src="docs/images/icon.png" alt="Tinycast Sonoma app icon" width="128" height="128"></a><br>
   Tinycast Sonoma
 </h1>
 
 <p align="center">
-  A native macOS launcher for everyday productivity. Lightweight and open source.
+  A macOS 14.4 fork of Tinycast, the native launcher for everyday productivity.
 </p>
 
 <p align="center">
-  <a href="#install"><strong>Install</strong></a> ·
+  <a href="#build"><strong>Build</strong></a> ·
   <a href="docs/README.md"><strong>Docs</strong></a> ·
-  <a href="https://github.com/penguinstark/tinycast-sonoma"><strong>Source</strong></a>
+  <a href="https://github.com/penguinstark/tinycast"><strong>Source</strong></a>
 </p>
 
 <p align="center">
@@ -21,23 +21,34 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.jpg" alt="Tinycast command palette">
+  <img src="docs/screenshot.jpg" alt="Tinycast Sonoma command palette">
 </p>
 
 Built with SwiftUI and AppKit. No dependencies, no Electron, no telemetry. It runs your Raycast
 extensions, too.
 
-[Explore all features →](docs/README.md)
+Tinycast Sonoma is a personal fork of [Tinycast](https://github.com/abue-ammar/tinycast) that targets
+macOS 14.4. It does not track the upstream app, and it has no website, Discord, funding page or
+release channel. The branch that builds on Xcode 16.2 is `xcode16-local`.
 
-## Install
+## Build
 
-A frozen macOS 14.4 edition of Tinycast. Install with Homebrew:
+Requires macOS 14.4 or later and Xcode 16.2 with Swift 6.0.
 
 ```sh
-brew install --cask tinycast-sonoma
+git clone https://github.com/penguinstark/tinycast.git
+cd tinycast
+./Scripts/local-signing.sh   # once: a stable self-signed identity for local builds
+open Tinycast.xcodeproj      # ⌘R
 ```
 
-Updates arrive through `brew upgrade`; there is no in-app updater.
+The Debug build is its own channel: `Tinycast Sonoma Dev.app`, `com.tinycast.app.sonoma.dev`. It keeps
+its preferences, caches and permissions apart from the Release build.
+
+There is no published download and no Homebrew cask for this fork. Build it locally, and install the
+Release product wherever you keep your apps. Updates are whatever you build next.
+
+More in [docs/development.md](docs/development.md) and [docs/testing.md](docs/testing.md).
 
 ## License
 

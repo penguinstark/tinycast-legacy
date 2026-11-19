@@ -44,7 +44,6 @@ enum CommandID: String, CaseIterable, Sendable {
     case importFromRaycast = "command:import-from-raycast"
     case settings = "command:settings"
     case about = "command:about"
-    case support = "command:support"
     case quit = "command:quit"
 
     static let defaultCompactBarCommands: [CommandID] = [
@@ -117,8 +116,7 @@ enum CommandID: String, CaseIterable, Sendable {
         case .importFromRaycast: return "Import from Raycast"
         case .settings: return "Tinycast Settings"
         case .about: return "About Tinycast"
-        case .support: return "Support Tinycast"
-        case .quit: return "Quit Tinycast"
+            case .quit: return "Quit Tinycast"
         }
     }
 
@@ -165,7 +163,6 @@ enum CommandID: String, CaseIterable, Sendable {
         case .importFromRaycast: return "arrow.down.doc"
         case .settings: return "gearshape"
         case .about: return "info.circle"
-        case .support: return "heart"
         case .quit: return "power"
         }
     }
