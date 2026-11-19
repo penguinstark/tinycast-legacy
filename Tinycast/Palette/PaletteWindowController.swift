@@ -102,16 +102,19 @@ final class PaletteWindowController: NSObject, NSWindowDelegate {
 
     /// Builds and paints the first frame while hidden, so the first summon costs what every later one does.
     func prewarm() {
-        guard panel == nil, !isVisible, let screen = targetScreen() else { return }
+        guard panel == nil, !isVisible else { return }
         let panel = ensurePanel()
+        // Lay out at the frame the first summon will use, so that summon only orders it front.
+        anchor = nil
+        positionPanel(panel, collapsed: core.paletteCoordinator.paletteIsCollapsed)
         panel.alphaValue = 0
-        panel.setFrameOrigin(NSPoint(x: screen.frame.maxX + 1, y: screen.frame.maxY + 1))
         panel.orderFrontRegardless()
         panel.contentView?.layoutSubtreeIfNeeded()
         panel.displayIfNeeded()
         CATransaction.flush()
         panel.orderOut(nil)
         panel.alphaValue = 1
+        anchor = nil
     }
 
     // Isolated so teardown may touch the main-actor monitor; the block is already weak.

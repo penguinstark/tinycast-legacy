@@ -56,6 +56,11 @@ Opening the app summons the launcher too: a Dock click or a second open through 
 cold launch from Finder, Spotlight or a relaunch through `start(launchedByUser:)`. A login-item or URL
 launch shows nothing, and the very first launch shows onboarding instead.
 
+A login-item launch prewarms the panel one second after `start()`: it is built and painted at the frame
+the first summon will use, at zero alpha, then ordered out. That summon only orders it front, so a cold
+launch never pays the first-mount cost on the hotkey. A launch show or an earlier summon simply spends
+the prewarm.
+
 ## Screens
 
 `PaletteState` (mode / query / selection / `focusToken`) is the bridge between the panel and the app.
