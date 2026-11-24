@@ -4,6 +4,14 @@ Tinycast Legacy is a one-way fork of [`abue-ammar/tinycast`](https://github.com/
 It does not track `upstream/main` and has no merge commit. Upstream changes are reviewed one commit
 at a time and cherry-picked when they matter on macOS 14.4.
 
+## Repository topology
+
+The GitHub repo `penguinstark/tinycast-legacy` is **standalone**, not a GitHub fork. The code lineage
+is still one-way from upstream, but the old GitHub fork was renamed to `tinycast-legacy-fork` and
+archived. Fork-authored commits were re-attributed to the `penguinstark` account (its GitHub noreply
+address); upstream commits keep their original authors. GitHub does not count commits in a fork
+toward the contribution calendar, which is why the standalone repo was created.
+
 The fork's base is `58168bf7` (2026-11-08). The `upstream` remote points at the original repository:
 
 ```sh
